@@ -21,6 +21,11 @@ public class FlightlessBird extends Bird {
         }
     }
 
+    public FlightlessBird(BirdType.FlightlessBirdTypes type, String characteristic, Boolean distinct, Integer numOfWings, Set<Food> favoriteFoods) {
+        super(type.getType(), characteristic, distinct, numOfWings, favoriteFoods);
+        // We will give a default type to FlightlessBird.class if user doesn't assign
+    }
+
     public FlightlessBird(String type) {
         super(type);
         if (type == null || type.equals("")) {

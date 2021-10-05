@@ -1,6 +1,5 @@
 package entity.birds;
 
-import entity.birds.PreyBird;
 import entity.birds.enums.BirdType;
 import entity.environment.enums.Food;
 import org.junit.Before;

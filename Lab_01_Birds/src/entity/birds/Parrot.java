@@ -108,4 +108,9 @@ public class Parrot extends Bird {
                 ", favoriteFoods=" + getFavoriteFoods() +
                 "}";
     }
+
+    public static void main(String[] args) {
+        Parrot parrot = new Parrot(BirdType.ParrotTypes.ROSE_RING_PARAKEET);
+        System.out.println(parrot);
+    }
 }

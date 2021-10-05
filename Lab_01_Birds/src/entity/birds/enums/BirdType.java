@@ -8,7 +8,9 @@ package entity.birds.enums;
  */
 public class BirdType {
     public enum PreyBirdTypes {
-        HAWKS("hawk"), EAGLES("eagle"), OSPREY("osprey");
+        HAWKS("hawk"),
+        EAGLES("eagle"),
+        OSPREY("osprey");
 
         private final String type;
 
@@ -22,7 +24,9 @@ public class BirdType {
     }
 
     public enum WaterfowlTypes {
-        DUCK("duck"), SWAN("swan"), GOOSE("goose");
+        DUCK("duck"),
+        SWAN("swan"),
+        GOOSE("goose");
 
         private final String type;
 
@@ -36,7 +40,9 @@ public class BirdType {
     }
 
     public enum ShoreBirdTypes {
-        GREAT_AUK("great awk"), HORNED_PUFFIN("horned puffin"), AFRICAN_JACANA("african jacana");
+        GREAT_AUK("great awk"),
+        HORNED_PUFFIN("horned puffin"),
+        AFRICAN_JACANA("african jacana");
 
         private final String type;
 
@@ -64,7 +70,9 @@ public class BirdType {
     }
 
     public enum ParrotTypes {
-        ROSE_RING_PARAKEET("rose-ring parakeet"), GRAY_PARROT("gray parrot"), SULFUR_CRESTED_COCKATOO("sulfur crested cockatoo");
+        ROSE_RING_PARAKEET("rose-ring parakeet"),
+        GRAY_PARROT("gray parrot"),
+        SULFUR_CRESTED_COCKATOO("sulfur crested cockatoo");
 
         private final String type;
 
@@ -92,7 +100,9 @@ public class BirdType {
     }
 
     public enum FlightlessBirdTypes {
-        EMU("emu"), KIWI("kiwi"), MOAS("moas");
+        EMU("emu"),
+        KIWI("kiwi"),
+        MOAS("moas");
 
         private final String type;
 
@@ -104,4 +114,5 @@ public class BirdType {
             return type;
         }
     }
+
 }

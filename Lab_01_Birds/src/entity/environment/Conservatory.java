@@ -127,6 +127,9 @@ public class Conservatory {
      * @param aviary new aviary
      */
     public void addAviary(Aviary aviary) throws IllegalStateException {
+        if (aviary == null) {
+            throw new IllegalArgumentException("Argument cannot be null");
+        }
         if (aviaries.size() >= 20) {
             throw new IllegalStateException("Already has 20 aviaries!");
         }
@@ -139,6 +142,9 @@ public class Conservatory {
      * @param aviary the one need to delete
      */
     public void removeAviary(Aviary aviary) {
+        if (aviary == null) {
+            throw new IllegalArgumentException("Argument cannot be null");
+        }
         aviaries.remove(aviary);
     }
 
@@ -147,37 +153,39 @@ public class Conservatory {
      *
      * @param bird   target bird
      * @param aviary target aviary
-     * @return result
      */
-    public boolean assignBirdToAviary(Bird bird, Aviary aviary) {
+    public void assignBirdToAviary(Bird bird, Aviary aviary) {
+        if (bird == null || aviary == null) {
+            throw new IllegalArgumentException("Arguments cannot be null");
+        }
         // check if the number of birds will exceed maximum
         if (aviary.getNumOfBirds() >= Aviary.MAX_CAPACITY) {
-            return false;
+            throw new IllegalStateException("More than 5 birds in this aviary!");
         }
         // check if this bird could be assigned to this aviary or not
-        if (!aviary.isConflict(bird)) {
-            // add this bird to aviary
-            aviary.addBird(bird);
-            // remove this bird from temporary conservatory
-            birds.get(bird.getType()).remove(bird);
-            return true;
+        if (aviary.isConflict(bird)) {
+            throw new IllegalArgumentException("Conflicting birds!");
         }
-        return false;
+        // add this bird to aviary
+        aviary.addBird(bird);
+        // remove this bird from temporary conservatory
+        birds.get(bird.getType()).remove(bird);
     }
 
     /**
      * rescue a bird.
      *
      * @param bird target bird
-     * @return if the bird is distinct, return false
      */
-    public boolean rescueBird(Bird bird) {
+    public void rescueBird(Bird bird) {
+        if (bird == null) {
+            throw new IllegalArgumentException("Arguments cannot be null");
+        }
         if (bird.isDistinct()) {
-            return false;
+            throw new IllegalArgumentException("This bird is distinct");
         }
         birds.putIfAbsent(bird.getType(), new ArrayList<>());
         birds.get(bird.getType()).add(bird);
-        return true;
     }
 
 
@@ -188,9 +196,12 @@ public class Conservatory {
      * @return aviary that the bird is in
      */
     public Aviary searchBird(Integer id) {
+        if (id == null) {
+            throw new IllegalArgumentException("Arguments cannot be null");
+        }
         for (Aviary aviary : aviaries) {
             for (Bird bird : aviary.getAllBirdsAsList()) {
-                if (bird.getId() == id) {
+                if (bird.getId().equals(id)) {
                     return aviary;
                 }
             }
@@ -204,7 +215,10 @@ public class Conservatory {
      * @param bird target
      * @return aviary that the bird is in
      */
-    public Aviary searchBird(Bird bird) {
+    public Aviary searchBirdInAviaries(Bird bird) {
+        if (bird == null) {
+            throw new IllegalArgumentException("Arguments cannot be null");
+        }
         for (Aviary aviary : aviaries) {
             if (aviary.getAllBirdsAsList().contains(bird)) {
                 return aviary;
@@ -216,9 +230,11 @@ public class Conservatory {
     /**
      * print all signs of all the aviaries
      */
-    private void printAllSigns() {
-        for (Aviary aviary : aviaries) {
-            System.out.println(Sign.getDescription(aviary));
+    public void printAllSigns() {
+        for (int i = 1; i <= aviaries.size(); i++) {
+            System.out.println("====== Aviary #" + i + " ======");
+            System.out.println(Sign.getDescription(aviaries.get(i - 1)));
+            System.out.println();
         }
     }
 

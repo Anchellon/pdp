@@ -22,6 +22,11 @@ public class AviaryTest {
 
     private Aviary aviary;
 
+    // ======== basic methods test ========
+
+    /**
+     * initialization
+     */
     @Before
     public void setUp() throws Exception {
         // duck
@@ -40,18 +45,27 @@ public class AviaryTest {
         aviary.addBird(duck);
     }
 
+    /**
+     * get a Map of all birds in the aviary
+     */
     @Test
     public void getAllBirds() {
         List<List<Bird>> birdsList = new ArrayList<>(aviary.getAllBirds().values());
         assertEquals(BirdType.WaterfowlTypes.DUCK.getType(), birdsList.get(0).get(0).getType());
     }
 
+    /**
+     * get a List of all birds in the aviary
+     */
     @Test
     public void getAllBirdsAsList() {
         List<Bird> birds = aviary.getAllBirdsAsList();
         assertEquals(BirdType.WaterfowlTypes.DUCK.getType(), birds.get(0).getType());
     }
 
+    /**
+     * try to add bird to aviary
+     */
     @Test
     public void addBird() {
         // Owl
@@ -65,29 +79,35 @@ public class AviaryTest {
         aviary.addBird(owl);
     }
 
+    /**
+     * get location of aviary
+     */
     @Test
     public void getLocation() {
         assertEquals(100.2, aviary.getLocation().getX(), 0);
         assertEquals(80.213, aviary.getLocation().getY(), 0);
     }
 
+    /**
+     * try to set location in two ways
+     */
     @Test
     public void setLocation() {
         aviary.setLocation(20.111, 50.222);
         assertEquals(20.111, aviary.getLocation().getX(), 0);
         assertEquals(50.222, aviary.getLocation().getY(), 0);
-    }
 
-    @Test
-    public void testSetLocation() {
         aviary.setLocation(new Location(20.111, 50.222));
         assertEquals(20.111, aviary.getLocation().getX(), 0);
         assertEquals(50.222, aviary.getLocation().getY(), 0);
     }
 
+    /**
+     * check if a bird is conflict to move into the aviary
+     */
     @Test
     public void isConflict() {
-        // Owl
+        // eagle
         Set<Food> eagleFavoriteFood = new HashSet<>();
         eagleFavoriteFood.add(Food.SMALL_MAMMALS);
         Bird eagle = new PreyBird(BirdType.PreyBirdTypes.EAGLES.getType(),
@@ -98,13 +118,47 @@ public class AviaryTest {
         assertTrue(aviary.isConflict(eagle));
     }
 
+    /**
+     * get number of birds living in the aviary
+     */
     @Test
     public void getNumOfBirds() {
         assertEquals(Integer.valueOf(1), aviary.getNumOfBirds());
     }
 
+    /**
+     * check if aviary is empty or not
+     */
     @Test
     public void isEmpty() {
         assertFalse(aviary.isEmpty());
     }
+
+    // ======== other cases ========
+
+    /**
+     * test using null as arguments
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void addNullBird() {
+        aviary.addBird(null);
+    }
+
+    /**
+     * test using null as arguments
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void isConflictUsingNull() {
+        aviary.isConflict(null);
+    }
+
+    /**
+     * test using null as arguments
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void setLocationUsingNull() {
+        aviary.setLocation(null);
+    }
+
+
 }

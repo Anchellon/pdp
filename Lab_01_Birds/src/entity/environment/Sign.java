@@ -16,6 +16,9 @@ public class Sign {
      * @return description
      */
     public static String getDescription(Aviary aviary) {
+        if (aviary.isEmpty()) {
+            System.out.println("EMPTY");
+        }
         StringBuilder description = new StringBuilder();
         // iterate all birds here
         List<Bird> birds = aviary.getAllBirdsAsList();

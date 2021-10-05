@@ -24,11 +24,24 @@ public class Aviary {
     private Map<String, List<Bird>> birds;
     private Location location;
 
+    /**
+     * constructor of aviary
+     * @param x coordinate x
+     * @param y coordinate y
+     */
     public Aviary(Double x, Double y) {
         this.birds = new HashMap<>();
         this.location = new Location(x, y);
     }
 
+    /**
+     * constructor of aviary
+     * @param location location of aviary
+     */
+    public Aviary(Location location) {
+        this.birds = new HashMap<>();
+        this.location = location;
+    }
 
     /**
      * get all birds in this aviary
@@ -58,6 +71,9 @@ public class Aviary {
      * @param bird bird to be added
      */
     public void addBird(Bird bird) {
+        if (bird == null) {
+            throw new IllegalArgumentException("Bird cannot be null");
+        }
         birds.putIfAbsent(bird.getType(), new ArrayList<>());
         birds.get(bird.getType()).add(bird);
     }
@@ -77,6 +93,9 @@ public class Aviary {
      * @param location new location
      */
     public void setLocation(Location location) {
+        if (location == null) {
+            throw new IllegalArgumentException("Arguement cannot be null");
+        }
         this.location = location;
     }
 
@@ -97,6 +116,9 @@ public class Aviary {
      * @return is conflict or not
      */
     public boolean isConflict(Bird bird) {
+        if (bird == null) {
+            throw new IllegalArgumentException("Bird cannot be null");
+        }
         // if this aviary is empty, then it will not have confliction
         if (this.isEmpty()) {
             return false;
