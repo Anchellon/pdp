@@ -12,6 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -62,7 +63,7 @@ public class ConservatoryTest {
                 2,
                 eagleFavoriteFood);
         conservatory.rescueBird(eagle);
-        aviary1.addBird(eagle);
+        conservatory.assignBirdToAviary(eagle, aviary1);
     }
 
     /**
@@ -71,6 +72,7 @@ public class ConservatoryTest {
     @Test
     public void getAllBirds() {
         System.out.println(conservatory.getAllBirds());
+        assertEquals(2, conservatory.getAllBirds().size());
     }
 
     /**
@@ -79,6 +81,11 @@ public class ConservatoryTest {
     @Test
     public void getAllBirdsNotInAviary() {
         System.out.println(conservatory.getAllBirdsNotInAviary());
+        int count = 0;
+        for (List<Bird> birds : conservatory.getAllBirdsNotInAviary().values()) {
+            count += birds.size();
+        }
+        assertEquals(1, count);
     }
 
     /**
@@ -87,6 +94,7 @@ public class ConservatoryTest {
     @Test
     public void getAllBirdsAsList() {
         System.out.println(conservatory.getAllBirdsAsList());
+        assertEquals(2, conservatory.getAllBirdsAsList().size());
     }
 
     /**
@@ -95,6 +103,7 @@ public class ConservatoryTest {
     @Test
     public void getAllBirdsWithLocation() {
         System.out.println(conservatory.getAllBirdsWithLocation());
+        assertEquals(1, conservatory.getAllBirdsWithLocation().size());
     }
 
     /**
@@ -103,6 +112,7 @@ public class ConservatoryTest {
     @Test
     public void getAviaryAndBirdsAsMap() {
         System.out.println(conservatory.getAviaryAndBirdsAsMap());
+        assertEquals(2, conservatory.getAviaryAndBirdsAsMap().size());
     }
 
     /**
@@ -111,7 +121,7 @@ public class ConservatoryTest {
     @Test
     public void getFoodsRequirements() {
         System.out.println(conservatory.getFoodsRequirements());
-
+        assertEquals(2, conservatory.getFoodsRequirements().size());
     }
 
     /**
@@ -120,6 +130,7 @@ public class ConservatoryTest {
     @Test
     public void getAllAviaries() {
         System.out.println(conservatory.getAllAviaries());
+        assertEquals(2, conservatory.getAllAviaries().size());
     }
 
     /**
@@ -272,7 +283,7 @@ public class ConservatoryTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testAddExtinctBird() {
-        // we create a moa(which is distinct).
+        // we create a moa(which is extinct).
         Set<Food> favoriteFoods = new HashSet<>();
         favoriteFoods.add(Food.FRUIT);
         FlightlessBird moa = new FlightlessBird(BirdType.FlightlessBirdTypes.MOAS,
@@ -338,4 +349,6 @@ public class ConservatoryTest {
     public void testSearchNonexistBird() {
         assertNull(conservatory.searchBird(-1));
     }
+
+
 }

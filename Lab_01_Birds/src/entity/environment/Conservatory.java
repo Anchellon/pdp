@@ -17,6 +17,9 @@ public class Conservatory {
     Map<String, List<Bird>> birds;
     List<Aviary> aviaries;
 
+    /**
+     * constructor of conservatory
+     */
     public Conservatory() {
         birds = new HashMap<>();
         aviaries = new ArrayList<>();
@@ -54,12 +57,15 @@ public class Conservatory {
         List<Bird> ans = new ArrayList<>();
         // add all birds to ans
         for (List<Bird> birdList : birds.values()) {
+            System.out.println(birdList);
             ans.addAll(birdList);
         }
         // iterate all aviaries
         for (Aviary aviary : aviaries) {
+            System.out.println(aviary.getAllBirdsAsList());
             ans.addAll(aviary.getAllBirdsAsList());
         }
+        System.out.println();
         return ans;
     }
 
@@ -159,7 +165,7 @@ public class Conservatory {
             throw new IllegalArgumentException("Arguments cannot be null");
         }
         // check if the number of birds will exceed maximum
-        if (aviary.getNumOfBirds() >= Aviary.MAX_CAPACITY) {
+        if (aviary.getNumOfBirds() > Aviary.MAX_CAPACITY) {
             throw new IllegalStateException("More than 5 birds in this aviary!");
         }
         // check if this bird could be assigned to this aviary or not
@@ -181,8 +187,8 @@ public class Conservatory {
         if (bird == null) {
             throw new IllegalArgumentException("Arguments cannot be null");
         }
-        if (bird.isDistinct()) {
-            throw new IllegalArgumentException("This bird is distinct");
+        if (bird.isExtinct()) {
+            throw new IllegalArgumentException("This bird is extinct");
         }
         birds.putIfAbsent(bird.getType(), new ArrayList<>());
         birds.get(bird.getType()).add(bird);

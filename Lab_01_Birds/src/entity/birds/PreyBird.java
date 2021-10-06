@@ -14,8 +14,8 @@ public class PreyBird extends Bird {
 
     private final static String DEFAULT_TYPE = "Prey Bird";
 
-    public PreyBird(String type, String characteristic, Boolean distinct, Integer numOfWings, Set<Food> favoriteFoods) {
-        super(type, characteristic, distinct, numOfWings, favoriteFoods);
+    public PreyBird(String type, String characteristic, Boolean extinct, Integer numOfWings, Set<Food> favoriteFoods) {
+        super(type, characteristic, extinct, numOfWings, favoriteFoods);
         // We will give a default type to PreyBird.class if user doesn't assign
         if (type == null || type.equals("")) {
             this.setType(DEFAULT_TYPE);
@@ -39,6 +39,7 @@ public class PreyBird extends Bird {
 
     /**
      * check if target bird is a prey bird or not
+     *
      * @param bird target bird
      * @return is a prey bird or not
      */
@@ -54,7 +55,7 @@ public class PreyBird extends Bird {
                 "id=" + getId() +
                 ", type=" + getType() +
                 ", characteristic=" + getCharacteristic() +
-                ", isDistinct=" + isDistinct() +
+                ", isExtinct=" + isExtinct() +
                 ", numOfWings=" + getNumOfWings() +
                 ", favoriteFoods=" + getFavoriteFoods() +
                 "}";

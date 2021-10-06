@@ -89,15 +89,15 @@ public class PreyBirdTest {
     }
 
     @Test
-    public void isDistinct() {
-        assertFalse(hawk.isDistinct());
+    public void isExtinct() {
+        assertFalse(hawk.isExtinct());
     }
 
     @Test
-    public void setDistinct() {
-        // check if we could change the distinct status
-        hawk.setDistinct(true);
-        assertTrue(hawk.isDistinct());
+    public void setExtinct() {
+        // check if we could change the extinct status
+        hawk.setExtinct(true);
+        assertTrue(hawk.isExtinct());
     }
 
     @Test

@@ -18,15 +18,15 @@ public abstract class Bird {
     // type could not be changed after construction
     private String type;
     private String characteristic;
-    private Boolean distinct;
+    private Boolean extinct;
     private Integer numOfWings;
     private Set<Food> favoriteFoods;
 
-    public Bird(String type, String characteristic, Boolean distinct, Integer numOfWings, Set<Food> favoriteFoods) {
+    public Bird(String type, String characteristic, Boolean extinct, Integer numOfWings, Set<Food> favoriteFoods) {
         this.id = count++;
         this.type = type;
         this.characteristic = characteristic;
-        this.distinct = distinct;
+        this.extinct = extinct;
         this.numOfWings = numOfWings;
         this.favoriteFoods = favoriteFoods;
     }
@@ -74,17 +74,17 @@ public abstract class Bird {
     }
 
     /**
-     * check if bird is distinct
+     * check if bird is extinct
      */
-    public Boolean isDistinct() {
-        return distinct;
+    public Boolean isExtinct() {
+        return extinct;
     }
 
     /**
-     * set bird as distinct or not
+     * set bird as extinct or not
      */
-    public void setDistinct(Boolean distinct) {
-        this.distinct = distinct;
+    public void setExtinct(Boolean extinct) {
+        this.extinct = extinct;
     }
 
     /**
@@ -149,7 +149,7 @@ public abstract class Bird {
                 "id=" + id +
                 ", type='" + type + '\'' +
                 ", characteristic='" + characteristic + '\'' +
-                ", distinct=" + distinct +
+                ", extinct=" + extinct +
                 ", numOfWings=" + numOfWings +
                 ", favoriteFoods=" + favoriteFoods +
                 '}';

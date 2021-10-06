@@ -17,8 +17,8 @@ public class Parrot extends Bird {
     private Set<String> words = new HashSet<>();
     private String favoriteSaying;
 
-    public Parrot(String type, String characteristic, Boolean distinct, Integer numOfWings, Set<Food> favoriteFoods) {
-        super(type, characteristic, distinct, numOfWings, favoriteFoods);
+    public Parrot(String type, String characteristic, Boolean extinct, Integer numOfWings, Set<Food> favoriteFoods) {
+        super(type, characteristic, extinct, numOfWings, favoriteFoods);
         // We will give a default type to Parrot.class if user doesn't assign
         if (type == null || type.equals("")) {
             this.setType(DEFAULT_TYPE);
@@ -103,7 +103,7 @@ public class Parrot extends Bird {
                 "id=" + getId() +
                 ", type=" + getType() +
                 ", characteristic=" + getCharacteristic() +
-                ", isDistinct=" + isDistinct() +
+                ", isExtinct=" + isExtinct() +
                 ", numOfWings=" + getNumOfWings() +
                 ", favoriteFoods=" + getFavoriteFoods() +
                 "}";

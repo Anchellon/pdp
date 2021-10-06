@@ -15,8 +15,8 @@ import java.util.Set;
 public abstract class WaterBird extends Bird {
     private Set<WaterSource> waterSources;
 
-    public WaterBird(String type, String characteristic, Boolean distinct, Integer numOfWings, Set<Food> favoriteFoods, Set<WaterSource> waterSources) {
-        super(type, characteristic, distinct, numOfWings, favoriteFoods);
+    public WaterBird(String type, String characteristic, Boolean extinct, Integer numOfWings, Set<Food> favoriteFoods, Set<WaterSource> waterSources) {
+        super(type, characteristic, extinct, numOfWings, favoriteFoods);
         this.waterSources = waterSources;
     }
 

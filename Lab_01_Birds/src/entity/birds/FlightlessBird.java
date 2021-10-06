@@ -13,16 +13,16 @@ import java.util.Set;
 public class FlightlessBird extends Bird {
     private final static String DEFAULT_TYPE = "Flightless Bird";
 
-    public FlightlessBird(String type, String characteristic, Boolean distinct, Integer numOfWings, Set<Food> favoriteFoods) {
-        super(type, characteristic, distinct, numOfWings, favoriteFoods);
+    public FlightlessBird(String type, String characteristic, Boolean extinct, Integer numOfWings, Set<Food> favoriteFoods) {
+        super(type, characteristic, extinct, numOfWings, favoriteFoods);
         // We will give a default type to FlightlessBird.class if user doesn't assign
         if (type == null || type.equals("")) {
             this.setType(DEFAULT_TYPE);
         }
     }
 
-    public FlightlessBird(BirdType.FlightlessBirdTypes type, String characteristic, Boolean distinct, Integer numOfWings, Set<Food> favoriteFoods) {
-        super(type.getType(), characteristic, distinct, numOfWings, favoriteFoods);
+    public FlightlessBird(BirdType.FlightlessBirdTypes type, String characteristic, Boolean extinct, Integer numOfWings, Set<Food> favoriteFoods) {
+        super(type.getType(), characteristic, extinct, numOfWings, favoriteFoods);
         // We will give a default type to FlightlessBird.class if user doesn't assign
     }
 
@@ -58,7 +58,7 @@ public class FlightlessBird extends Bird {
                 "id=" + getId() +
                 ", type=" + getType() +
                 ", characteristic=" + getCharacteristic() +
-                ", isDistinct=" + isDistinct() +
+                ", isExtinct=" + isExtinct() +
                 ", numOfWings=" + getNumOfWings() +
                 ", favoriteFoods=" + getFavoriteFoods() +
                 "}";

@@ -14,8 +14,8 @@ import java.util.Set;
 public class ShoreBird extends WaterBird {
     private final static String DEFAULT_TYPE = "ShoreBird Bird";
 
-    public ShoreBird(String type, String characteristic, Boolean distinct, Integer numOfWings, Set<Food> favoriteFoods, Set<WaterSource> waterSources) {
-        super(type, characteristic, distinct, numOfWings, favoriteFoods, waterSources);
+    public ShoreBird(String type, String characteristic, Boolean extinct, Integer numOfWings, Set<Food> favoriteFoods, Set<WaterSource> waterSources) {
+        super(type, characteristic, extinct, numOfWings, favoriteFoods, waterSources);
         // We will give a default type to ShoreBird.class if user doesn't assign
         if (type == null || type.equals("")) {
             this.setType(DEFAULT_TYPE);
@@ -43,7 +43,7 @@ public class ShoreBird extends WaterBird {
                 "id=" + getId() +
                 ", type=" + getType() +
                 ", characteristic=" + getCharacteristic() +
-                ", isDistinct=" + isDistinct() +
+                ", isExtinct=" + isExtinct() +
                 ", numOfWings=" + getNumOfWings() +
                 ", favoriteFoods=" + getFavoriteFoods() +
                 ", waterSources=" + getWaterSources() +

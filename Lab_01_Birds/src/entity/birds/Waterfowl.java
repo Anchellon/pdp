@@ -16,8 +16,8 @@ public class Waterfowl extends WaterBird {
 
     private final static String DEFAULT_TYPE = "Waterfowl Bird";
 
-    public Waterfowl(String type, String characteristic, Boolean distinct, Integer numOfWings, Set<Food> favoriteFoods, Set<WaterSource> waterSources) {
-        super(type, characteristic, distinct, numOfWings, favoriteFoods, waterSources);
+    public Waterfowl(String type, String characteristic, Boolean extinct, Integer numOfWings, Set<Food> favoriteFoods, Set<WaterSource> waterSources) {
+        super(type, characteristic, extinct, numOfWings, favoriteFoods, waterSources);
         // We will give a default type to Waterfowl.class if user doesn't assign
         if (type == null || type.equals("")) {
             this.setType(DEFAULT_TYPE);
@@ -56,7 +56,7 @@ public class Waterfowl extends WaterBird {
                 "id=" + getId() +
                 ", type=" + getType() +
                 ", characteristic=" + getCharacteristic() +
-                ", isDistinct=" + isDistinct() +
+                ", isExtinct=" + isExtinct() +
                 ", numOfWings=" + getNumOfWings() +
                 ", favoriteFoods=" + getFavoriteFoods() +
                 ", waterSources=" + getWaterSources() +

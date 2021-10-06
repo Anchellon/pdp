@@ -94,15 +94,15 @@ public class ParrotTest {
     }
 
     @Test
-    public void isDistinct() {
-        assertFalse(roseRingParakeet.isDistinct());
+    public void isExtinct() {
+        assertFalse(roseRingParakeet.isExtinct());
     }
 
     @Test
-    public void setDistinct() {
-        // check if we could change the distinct status
-        roseRingParakeet.setDistinct(true);
-        assertTrue(roseRingParakeet.isDistinct());
+    public void setExtinct() {
+        // check if we could change the extinct status
+        roseRingParakeet.setExtinct(true);
+        assertTrue(roseRingParakeet.isExtinct());
     }
 
     @Test

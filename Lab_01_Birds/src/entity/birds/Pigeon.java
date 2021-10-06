@@ -13,8 +13,8 @@ import java.util.Set;
 public class Pigeon extends Bird {
     private final static String DEFAULT_TYPE = "Pigeon";
 
-    public Pigeon(String type, String characteristic, Boolean distinct, Integer numOfWings, Set<Food> favoriteFoods) {
-        super(type, characteristic, distinct, numOfWings, favoriteFoods);
+    public Pigeon(String type, String characteristic, Boolean extinct, Integer numOfWings, Set<Food> favoriteFoods) {
+        super(type, characteristic, extinct, numOfWings, favoriteFoods);
         // We will give a default type to Pigeon.class if user doesn't assign
         if (type == null || type.equals("")) {
             this.setType(DEFAULT_TYPE);
@@ -42,7 +42,7 @@ public class Pigeon extends Bird {
                 "id=" + getId() +
                 ", type=" + getType() +
                 ", characteristic=" + getCharacteristic() +
-                ", isDistinct=" + isDistinct() +
+                ", isExtinct=" + isExtinct() +
                 ", numOfWings=" + getNumOfWings() +
                 ", favoriteFoods=" + getFavoriteFoods() +
                 "}";
