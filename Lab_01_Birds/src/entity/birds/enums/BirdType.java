@@ -83,6 +83,7 @@ public class BirdType {
         public String getType() {
             return type;
         }
+
     }
 
     public enum OwlTypes {
