@@ -25,6 +25,8 @@ public interface Gear {
     // getters and setters
     GearType getType();
 
+    long getId();
+
     /**
      * Get adjective of this gear
      *
@@ -52,13 +54,6 @@ public interface Gear {
      * @return defense strength
      */
     int getDefense();
-
-    /**
-     * Set type of this gear
-     *
-     * @param type type
-     */
-    void setType(GearType type);
 
     /**
      * Set adjective of this gear

@@ -88,4 +88,40 @@ public class BattleTest {
         System.out.println(battle.status());
         System.out.println(battle.winner());
     }
+
+    /**
+     * Try to construct battle with null player
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void constructBattleWithNullPlayer() {
+        battle = new Battle(null, null);
+    }
+
+    /**
+     * Try to construct battle with same player
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void constructBattleWithSamePlayer() {
+        Player p1 = new Player("testPlayer");
+        battle = new Battle(p1, p1);
+    }
+
+    /**
+     * Try to add null gear to battle
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void addNullGear() {
+        battle.addGear((Gear) null);
+    }
+
+    /**
+     * Try to add duplicate gears to battle
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void addDuplicateGearToBattle() {
+        Gear dupGear = new HeadWear("test", "test", 1);
+        battle.addGear(dupGear);
+        battle.addGear(dupGear);
+    }
+
 }

@@ -12,7 +12,7 @@ import util.CountUtil;
  */
 public class AbstractGear implements Gear {
     private final long gearId;
-    private GearType type;
+    private final GearType type;
     private String adj;
     private String noun;
     private int attack;
@@ -32,6 +32,9 @@ public class AbstractGear implements Gear {
      * @param defense defense strength
      */
     public AbstractGear(GearType type, String adj, String noun, int attack, int defense) {
+        if (type == null || adj == null || adj.equals("") || noun == null || noun.equals("")) {
+            throw new IllegalArgumentException("Arguments cannot be null or empty");
+        }
         this.type = type;
         this.adj = adj;
         this.noun = noun;
@@ -53,6 +56,9 @@ public class AbstractGear implements Gear {
      */
     @Override
     public Gear combine(Gear gear) throws Exception {
+        if (gear == null) {
+            throw new IllegalArgumentException("Gear cannot be null");
+        }
         // check types
         if (gear.getType() != this.getType()) {
             throw new IllegalArgumentException("Failed to combine -- different types");
@@ -92,14 +98,9 @@ public class AbstractGear implements Gear {
         return type;
     }
 
-    /**
-     * Set type of this gear
-     *
-     * @param type type
-     */
     @Override
-    public void setType(GearType type) {
-        this.type = type;
+    public long getId() {
+        return gearId;
     }
 
     /**
@@ -212,5 +213,16 @@ public class AbstractGear implements Gear {
         return getAdj() + " " + getNoun();
     }
 
-
+    @Override
+    public String toString() {
+        return "AbstractGear{" +
+                "gearId=" + gearId +
+                ", type=" + type +
+                ", adj='" + adj + '\'' +
+                ", noun='" + noun + '\'' +
+                ", attack=" + attack +
+                ", defense=" + defense +
+                ", hasCombined=" + hasCombined +
+                '}';
+    }
 }

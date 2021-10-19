@@ -7,15 +7,16 @@ package util;
  * @since 2021/10/18
  */
 public class CountUtil {
-    private static int gearId = 0;
-    private static int playerId = 0;
+    private static long gearId = 1;
+    private static long playerId = 1;
+    private static long battleId = 1;
 
     /**
      * auto generate unique gear id
      *
      * @return new gear id
      */
-    public static int generateGearId() {
+    public static long generateGearId() {
         return gearId++;
     }
 
@@ -24,7 +25,16 @@ public class CountUtil {
      *
      * @return new player id
      */
-    public static int generatePlayerId() {
+    public static long generatePlayerId() {
         return playerId++;
+    }
+
+    /**
+     * auto generate unique battle id
+     *
+     * @return new battle id
+     */
+    public static long generateBattleId() {
+        return battleId++;
     }
 }

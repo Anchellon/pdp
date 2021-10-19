@@ -4,6 +4,7 @@ import battle.BattleInterface;
 import item.Gear;
 import item.enums.GearType;
 import player.Player;
+import util.CountUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +15,8 @@ import java.util.Random;
  * @since 2021/10/19
  */
 public class Battle implements BattleInterface {
+    private final long battleId;
+
     // two players in a battle
     private Player player1;
     private Player player2;
@@ -39,6 +42,7 @@ public class Battle implements BattleInterface {
         this.player1 = player1;
         this.player2 = player2;
         this.gears = gears;
+        this.battleId = CountUtil.generateBattleId();
     }
 
     /**
@@ -136,6 +140,12 @@ public class Battle implements BattleInterface {
         System.out.println("-------------------------- STOP PICKING --------------------------\n\n\n\n");
     }
 
+    /**
+     * Let one player pick up one gear form gears
+     *
+     * @param player the player who is gonna pick up gear
+     * @return did the player successfully pick up a gear
+     */
     private boolean pickGear(Player player) throws Exception {
         // check argument
         if (player == null) {
@@ -158,7 +168,7 @@ public class Battle implements BattleInterface {
                 // if this gear is a foot wear and player still has slot for this gear
                 pickedGear = gear;
                 break;
-            } else if (gear.getType() == GearType.HAND && player.canPickHandGear()){
+            } else if (gear.getType() == GearType.HAND && player.canPickHandGear()) {
                 // if this gear is a hand gear and player still has slot for this gear
                 pickedGear = gear;
                 break;
@@ -188,7 +198,7 @@ public class Battle implements BattleInterface {
      * <p>
      * Rule 2: if rule 1 leads to multiple choices, pick which item has the highest strength
      * <p>
-     * We would know, attack has high priority over defense. So we just sort gears by their attack.
+     * We would know, attack has higher priority over defense. So we just sort gears by their attack.
      */
     private void sortGears() {
         gears.sort((g1, g2) -> {
@@ -207,6 +217,9 @@ public class Battle implements BattleInterface {
 
     @Override
     public String winner() {
+        if (player1 == null || player2 == null) {
+            throw new IllegalStateException("Players cannot be null before starting");
+        }
         // get attack power and defense strength of p1
         int attackOfP1 = player1.getTotalAttack();
         int defenseOfP1 = player1.getTotalDefense();
@@ -215,15 +228,17 @@ public class Battle implements BattleInterface {
         int attackOfP2 = player2.getTotalAttack();
         int defenseOfP2 = player2.getTotalDefense();
         StringBuilder res = new StringBuilder();
-        res.append("======== RESULT OF BATTLE ========").append("\n");
+        res.append("====================================").append("\n")
+                .append("======== RESULT OF BATTLE ").append(battleId).append(" ========").append("\n");
         if (attackOfP1 - defenseOfP2 > attackOfP2 - defenseOfP1) {
             // p1 win
-            res.append("========   Player 1 WON   ========");
-        } else if (attackOfP1 - defenseOfP2 < attackOfP2 - defenseOfP1){
-            res.append("========   Player 2 WON   ========");
+            res.append("========    Player 1 WON    ========");
+        } else if (attackOfP1 - defenseOfP2 < attackOfP2 - defenseOfP1) {
+            res.append("========    Player 2 WON    ========");
         } else {
-            res.append("========        TIE       ========");
+            res.append("========         TIE        ========");
         }
+        res.append("\n====================================").append("\n");
         return res.toString();
     }
 }

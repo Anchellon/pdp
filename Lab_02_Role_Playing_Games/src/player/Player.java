@@ -36,6 +36,9 @@ public class Player {
      * @param defenseBase original defense strength of the player, can't be changed in the future
      */
     public Player(String name, int attackBase, int defenseBase) {
+        if (name == null || name.equals("")) {
+            throw new IllegalArgumentException("Name cannot be null or empty");
+        }
         this.name = name;
         this.attackBase = attackBase;
         this.defenseBase = defenseBase;
@@ -68,6 +71,7 @@ public class Player {
 
     /**
      * get total attack power of this player
+     *
      * @return total attack power
      */
     public int getTotalAttack() {
@@ -83,6 +87,7 @@ public class Player {
 
     /**
      * get total defense strength of this player
+     *
      * @return total defense strength
      */
     public int getTotalDefense() {
@@ -146,6 +151,13 @@ public class Player {
      * @throws Exception When the type doesn't exist or illegal, throw exception
      */
     public void pickup(Gear gear) throws Exception {
+        if (gear == null) {
+            throw new IllegalArgumentException("Gear cannot be null");
+        }
+        // check if player has already picked up this gear
+        if (headGear == gear || handGear.contains(gear) || footwear.contains(gear)) {
+            throw new IllegalArgumentException("This gear has already been picked up");
+        }
         // combine gear by its type
         switch (gear.getType()) {
             case HEAD:
@@ -179,6 +191,9 @@ public class Player {
             headGear = gear;
         } else {
             // player already has head gear, combine them.
+            if (headGear.hasCombined()) {
+                throw new IllegalStateException("No slot for new gear");
+            }
             headGear = headGear.combine(gear);
         }
     }
@@ -258,15 +273,22 @@ public class Player {
                 .append("* original attack power: ").append(attackBase).append("\n")
                 .append("* original defense strength: ").append(defenseBase).append("\n")
                 .append("* gears: ").append("\n")
-                .append("    - head gear: ").append("\n")
-                .append("        ").append("「 ").append(headGear.getFullName()).append(" 」").append("\n")
-                .append("          > defense strength = ").append(headGear.getDefense()).append("\n")
-                .append("    - hand gears: ").append("\n");
+                .append("    - head gear: ").append("\n");
+        if (headGear == null) {
+            sb.append("        NONE").append("\n");
+        } else {
+            sb.append("        ").append("「 ").append(headGear.getFullName()).append(" 」").append("\n")
+                    .append("          > defense strength = ").append(headGear.getDefense()).append("\n");
+        }
+
+        sb.append("    - hand gears: ").append("\n");
         int totalAttack = this.attackBase;
         int totalDefense = this.defenseBase;
-        totalDefense += headGear.getDefense();
+        if (headGear != null) {
+            totalDefense += headGear.getDefense();
+        }
         if (handGear.size() == 0) {
-            sb.append("NONE").append("\n");
+            sb.append("        NONE").append("\n");
         } else {
             for (Gear curr : handGear) {
                 sb.append("        「 ").append(curr.getFullName()).append(" 」").append("\n");
@@ -278,7 +300,7 @@ public class Player {
 
         sb.append("    - foot wears: ").append("\n");
         if (footwear.size() == 0) {
-            sb.append("NONE").append("\n");
+            sb.append("        NONE").append("\n");
         } else {
             for (Gear curr : footwear) {
                 sb.append("        「 ").append(curr.getFullName()).append(" 」").append("\n");
@@ -290,7 +312,7 @@ public class Player {
         }
         sb.append("----------------------------").append("\n");
         sb.append("* total attack power: ").append(totalAttack).append("\n");
-        sb.append("* total defense strength: ").append(totalDefense).append("\n");
+        sb.append("* total defense strength: ").append(totalDefense).append("\n\n\n\n");
         return sb.toString();
     }
 
