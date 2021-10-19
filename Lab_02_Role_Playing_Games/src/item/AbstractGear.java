@@ -1,6 +1,7 @@
 package item;
 
 import item.enums.GearType;
+import util.CountUtil;
 
 /**
  * Abstract class of gears, implementing {@link Gear}.
@@ -10,6 +11,7 @@ import item.enums.GearType;
  * @since 2021/10/18
  */
 public class AbstractGear implements Gear {
+    private final long gearId;
     private GearType type;
     private String adj;
     private String noun;
@@ -35,6 +37,8 @@ public class AbstractGear implements Gear {
         this.noun = noun;
         this.attack = attack;
         this.defense = defense;
+        // get auto generated id
+        this.gearId = CountUtil.generateGearId();
     }
 
     /**
@@ -59,7 +63,7 @@ public class AbstractGear implements Gear {
         }
         // generate new adjective in lexicographic order
         String newAdj = this.getAdj().compareTo(gear.getAdj()) <= 0 ?
-                this.getAdj() + ", " + gear.getType() : gear.getAdj() + ", " + this.getAdj();
+                this.getAdj() + ", " + gear.getAdj() : gear.getAdj() + ", " + this.getAdj();
         // generate new noun in lexicographic order
         String newNoun = this.getNoun().compareTo(gear.getNoun()) <= 0 ?
                 this.getNoun() : gear.getNoun();
