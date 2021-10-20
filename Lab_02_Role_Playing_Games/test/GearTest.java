@@ -1,6 +1,6 @@
-import item.Gear;
-import item.impl.Footwear;
-import item.impl.HandWear;
+import gear.Gear;
+import gear.impl.Footwear;
+import gear.impl.HandWear;
 import org.junit.Before;
 import org.junit.Test;
 

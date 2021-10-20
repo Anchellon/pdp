@@ -1,7 +1,7 @@
 package player;
 
-import item.Gear;
-import item.enums.GearType;
+import gear.Gear;
+import gear.enums.GearType;
 import util.CountUtil;
 
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package item.enums;
+package gear.enums;
 
 /**
  * Enum of all types

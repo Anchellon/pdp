@@ -1,4 +1,4 @@
-# Item
+# Gear
 * Gear.java
 * AbstractGear.java
 * GearType.java

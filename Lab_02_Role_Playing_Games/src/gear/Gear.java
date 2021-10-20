@@ -1,6 +1,6 @@
-package item;
+package gear;
 
-import item.enums.GearType;
+import gear.enums.GearType;
 
 /**
  * Interface of gears.
@@ -10,17 +10,6 @@ import item.enums.GearType;
  * @since 2021/10/18
  */
 public interface Gear {
-    /**
-     * combine two gears
-     * steps:
-     * 1. first check if the gear is the same type
-     * 2. check both of gears have already combined or not
-     * 3. do combination
-     *
-     * @param gear gear gonna be combined
-     * @return combination of these two items
-     */
-    Gear combine(Gear gear) throws Exception;
 
     // getters and setters
     GearType getType();
@@ -103,4 +92,16 @@ public interface Gear {
      * @return True if this gear has already combined with other gears.False if not
      */
     boolean hasCombined();
+
+    /**
+     * combine two gears
+     * steps:
+     * 1. first check if the gear is the same type
+     * 2. check both of gears have already combined or not
+     * 3. do combination
+     *
+     * @param gear gear gonna be combined
+     * @return combination of these two items
+     */
+    Gear combine(Gear gear) throws Exception;
 }

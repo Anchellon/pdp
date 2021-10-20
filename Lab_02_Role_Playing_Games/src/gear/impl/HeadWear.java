@@ -1,7 +1,7 @@
-package item.impl;
+package gear.impl;
 
-import item.AbstractGear;
-import item.enums.GearType;
+import gear.AbstractGear;
+import gear.enums.GearType;
 
 /**
  * Class of head wear, inheriting from {@link AbstractGear}

@@ -1,8 +1,8 @@
 package battle.impl;
 
 import battle.BattleInterface;
-import item.Gear;
-import item.enums.GearType;
+import gear.Gear;
+import gear.enums.GearType;
 import player.Player;
 import util.CountUtil;
 

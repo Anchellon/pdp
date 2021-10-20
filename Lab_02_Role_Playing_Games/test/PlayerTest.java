@@ -1,7 +1,7 @@
-import item.Gear;
-import item.impl.Footwear;
-import item.impl.HandWear;
-import item.impl.HeadWear;
+import gear.Gear;
+import gear.impl.Footwear;
+import gear.impl.HandWear;
+import gear.impl.HeadWear;
 import org.junit.Before;
 import org.junit.Test;
 import player.Player;

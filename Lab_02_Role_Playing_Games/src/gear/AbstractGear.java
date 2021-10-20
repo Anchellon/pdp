@@ -1,6 +1,6 @@
-package item;
+package gear;
 
-import item.enums.GearType;
+import gear.enums.GearType;
 import util.CountUtil;
 
 /**
