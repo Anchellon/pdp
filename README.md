@@ -7,6 +7,7 @@ Date: Sep-2021
 ## Assignment
 * Assignment_03_Big_Numbers
 * Assignment_04_Questionnaires
+* Assignment_05_List_Utilities
 
 ## Lab
 * Lab_01_Birds
