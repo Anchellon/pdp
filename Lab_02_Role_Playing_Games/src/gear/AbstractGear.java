@@ -10,7 +10,7 @@ import util.CountUtil;
  * @author novo
  * @since 2021/10/18
  */
-public class AbstractGear implements Gear {
+public abstract class AbstractGear implements Gear {
     private final long gearId;
     private final GearType type;
     private String adj;

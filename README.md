@@ -12,3 +12,4 @@ Date: Sep-2021
 ## Lab
 * Lab_01_Birds
 * Lab_02_Role_Playing_Games
+* Lab_03_Mazes
