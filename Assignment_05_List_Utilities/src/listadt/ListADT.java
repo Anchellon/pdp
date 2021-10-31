@@ -1,6 +1,5 @@
 package listadt;
 
-import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -22,7 +21,7 @@ public interface ListADT<T> {
 
     ListNode<T> getDummyHead();
 
-    ListNode<T> getDummyEnd();
+    ListNode<T> getDummyTail();
 
     T get(int i);
 

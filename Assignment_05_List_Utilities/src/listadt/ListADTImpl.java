@@ -9,7 +9,7 @@ import java.util.Set;
  */
 public class ListADTImpl<T> implements ListADT<T> {
     private ListNode<T> dummyHead;
-    private ListNode<T> dummyEnd;
+    private ListNode<T> dummyTail;
     private int size = 0;
 
     /**
@@ -17,9 +17,9 @@ public class ListADTImpl<T> implements ListADT<T> {
      */
     public ListADTImpl() {
         dummyHead = new ListNode<>(null);
-        dummyEnd = new ListNode<>(null);
-        dummyHead.next = dummyEnd;
-        dummyEnd.prev = dummyHead;
+        dummyTail = new ListNode<>(null);
+        dummyHead.next = dummyTail;
+        dummyTail.prev = dummyHead;
     }
 
     @Override
@@ -37,7 +37,7 @@ public class ListADTImpl<T> implements ListADT<T> {
     public boolean disjoint(ListADT<?> o) {
         Set<T> valueSet = getValueSet();
         ListNode<?> temp = o.getDummyHead().next;
-        while (temp != o.getDummyEnd()) {
+        while (temp != o.getDummyTail()) {
             if (valueSet.contains(temp.val)) {
                 return false;
             }
@@ -51,12 +51,12 @@ public class ListADTImpl<T> implements ListADT<T> {
      */
     @Override
     public void addBack(T val) {
-        ListNode<T> tail = dummyEnd.prev;
+        ListNode<T> tail = dummyTail.prev;
         ListNode<T> newNode = new ListNode<>(val);
         tail.next = newNode;
         newNode.prev = tail;
-        newNode.next = dummyEnd;
-        dummyEnd.prev = newNode;
+        newNode.next = dummyTail;
+        dummyTail.prev = newNode;
         size++;
     }
 
@@ -64,7 +64,7 @@ public class ListADTImpl<T> implements ListADT<T> {
     public String toString() {
         StringBuilder s = new StringBuilder();
         ListNode<T> temp = dummyHead.next;
-        while (temp != dummyEnd) {
+        while (temp != dummyTail) {
             s.append(temp.val).append("\t");
             temp = temp.next;
         }
@@ -80,7 +80,7 @@ public class ListADTImpl<T> implements ListADT<T> {
         }
         ListNode<T> temp = dummyHead.next;
         int count = 0;
-        while (temp != dummyEnd) {
+        while (temp != dummyTail) {
             if (temp.val == val) {
                 count++;
             }
@@ -95,7 +95,7 @@ public class ListADTImpl<T> implements ListADT<T> {
     public Set<T> getValueSet() {
         Set<T> set = new HashSet<>();
         ListNode<T> temp = dummyHead.next;
-        while (temp != dummyEnd) {
+        while (temp != dummyTail) {
             set.add(temp.val);
             temp = temp.next;
         }
@@ -108,13 +108,13 @@ public class ListADTImpl<T> implements ListADT<T> {
      */
     public void reverse() {
         ListADT<T> result = new ListADTImpl<>();
-        ListNode<T> temp = dummyEnd.prev;
+        ListNode<T> temp = dummyTail.prev;
         while (temp != dummyHead) {
             result.addBack(temp.val);
             temp = temp.prev;
         }
         this.dummyHead = result.getDummyHead();
-        this.dummyEnd = result.getDummyEnd();
+        this.dummyTail = result.getDummyTail();
     }
 
     public void swap(int i, int j) {
@@ -125,7 +125,7 @@ public class ListADTImpl<T> implements ListADT<T> {
         ListNode<T> node1 = null, node2 = null;
         ListNode<T> temp = dummyHead.next;
         int count = 0;
-        while (temp != dummyEnd) {
+        while (temp != dummyTail) {
             if (count == i) {
                 node1 = temp;
             }
@@ -186,8 +186,8 @@ public class ListADTImpl<T> implements ListADT<T> {
         return dummyHead;
     }
 
-    public ListNode<T> getDummyEnd() {
-        return dummyEnd;
+    public ListNode<T> getDummyTail() {
+        return dummyTail;
     }
 
     @Override

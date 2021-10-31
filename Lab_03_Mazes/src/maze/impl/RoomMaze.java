@@ -1,8 +1,10 @@
 package maze.impl;
 
+import maze.AbstractMaze;
+
 /**
  * @author novo
  * @since 2021/10/24
  */
-public class RoomMaze {
+public class RoomMaze extends AbstractMaze {
 }
