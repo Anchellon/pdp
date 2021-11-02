@@ -12,11 +12,17 @@ public class AbstractCell implements Cell {
     private CellTypeEnum type;
 
     public AbstractCell(CellTypeEnum type, Location location) {
+        if (type == null || location == null || location.getX() < 0 || location.getY() < 0) {
+            throw new IllegalArgumentException("argument error");
+        }
         this.type = type;
         this.location = location;
     }
 
     public AbstractCell(CellTypeEnum type, int x, int y) {
+        if (type == null || x < 0 || y < 0) {
+            throw new IllegalArgumentException("argument error");
+        }
         this.type = type;
         this.location = new Location(x, y);
     }
@@ -29,6 +35,14 @@ public class AbstractCell implements Cell {
     @Override
     public boolean isGoldCell() {
         return type == CellTypeEnum.GOLD;
+    }
+
+    @Override
+    public long getGold() {
+        if (!isGoldCell()) {
+            throw new IllegalStateException("it's not a gold cell");
+        }
+        return 0;
     }
 
     @Override

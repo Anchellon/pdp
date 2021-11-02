@@ -29,5 +29,5 @@ public interface ListADT<T> {
 
     void addFront(T val);
 
-    boolean disjoint(ListADT<?> o);
+    boolean disjoint(ListADT<? extends T> o);
 }

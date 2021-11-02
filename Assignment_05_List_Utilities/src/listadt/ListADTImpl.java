@@ -34,9 +34,9 @@ public class ListADTImpl<T> implements ListADT<T> {
     }
 
     @Override
-    public boolean disjoint(ListADT<?> o) {
+    public boolean disjoint(ListADT<? extends T> o) {
         Set<T> valueSet = getValueSet();
-        ListNode<?> temp = o.getDummyHead().next;
+        ListNode<? extends T> temp = o.getDummyHead().next;
         while (temp != o.getDummyTail()) {
             if (valueSet.contains(temp.val)) {
                 return false;
@@ -117,9 +117,20 @@ public class ListADTImpl<T> implements ListADT<T> {
         this.dummyTail = result.getDummyTail();
     }
 
+    /**
+     * swap two elements at i and j
+     */
     public void swap(int i, int j) {
         if (i < 0 || i > size - 1 || j < 0 || j > size - 1) {
             throw new IndexOutOfBoundsException("Index out of bounds");
+        }
+        if (i == j) {
+            return;
+        }
+        // make sure i < j
+        if (i > j) {
+            swap(j, i);
+            return;
         }
         // get i
         ListNode<T> node1 = null, node2 = null;
@@ -138,7 +149,8 @@ public class ListADTImpl<T> implements ListADT<T> {
             count++;
             temp = temp.next;
         }
-        if (node1.next == node2 || node1.prev == node2) {
+        // check if they are adjacent or not
+        if (node1.next == node2) {
             swapAdjNode(node1, node2);
         } else {
             swapNode(node1, node2);

@@ -11,6 +11,8 @@ public interface Cell {
 
     boolean isGoldCell();
 
+    long getGold();
+
     Location getLocation();
 
     void setLocation(Location location);

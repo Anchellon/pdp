@@ -13,11 +13,15 @@ public class ThiefCell extends AbstractCell {
 
     private static final int DEFAULT_STEAL_RATIO = 10;
 
+    // each thief cell will only be used once
+    private boolean active;
+
     /**
      * Constructor
      */
     public ThiefCell(Location location) {
         super(CellTypeEnum.THIEF, location);
+        this.active = true;
     }
 
     /**

@@ -26,9 +26,13 @@ public class GoldCell extends AbstractCell {
      */
     public GoldCell(int x, int y, long gold) {
         super(CellTypeEnum.GOLD, x, y);
+        if (gold <= 0) {
+            throw new IllegalArgumentException("gold should be positive");
+        }
         this.gold = gold;
     }
 
+    @Override
     public long getGold() {
         return gold;
     }

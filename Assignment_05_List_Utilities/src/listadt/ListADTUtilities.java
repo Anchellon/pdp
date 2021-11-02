@@ -1,7 +1,5 @@
 package listadt;
 
-import java.util.Set;
-
 /**
  * @author novo
  * @since 2021/10/20
@@ -27,7 +25,7 @@ public class ListADTUtilities {
     public static <T> void addAll(ListADT<T> list, T... elements) {
         for (T ele : elements) {
             if (ele == null) {
-                throw new IllegalArgumentException("Contains null element");
+                throw new IllegalArgumentException("contains null elements");
             }
             list.addBack(ele);
         }
@@ -47,7 +45,7 @@ public class ListADTUtilities {
      * This method should throw a IllegalArgumentException if either
      * list is null or if either list contains a null element.
      */
-    public static <T> boolean disjoint(ListADT<?> one, ListADT<?> two) {
+    public static <T> boolean disjoint(ListADT<T> one, ListADT<? extends T> two) {
         if (one == null || two == null) {
             throw new IllegalArgumentException("null arguments");
         }
@@ -88,8 +86,7 @@ public class ListADTUtilities {
         if (i == j) {
             return;
         }
-
+        list.swap(i, j);
     }
-
 
 }

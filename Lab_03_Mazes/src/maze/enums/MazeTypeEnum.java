@@ -5,5 +5,5 @@ package maze.enums;
  * @since 2021/10/25
  */
 public enum MazeTypeEnum {
-    PERFECT, ROOM;
+    PERFECT, NON_WRAPPING_ROOM, WRAPPING_ROOM;
 }
