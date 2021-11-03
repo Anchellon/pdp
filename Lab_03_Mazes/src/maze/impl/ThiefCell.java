@@ -29,13 +29,19 @@ public class ThiefCell extends AbstractCell {
      */
     public ThiefCell(int x, int y) {
         super(CellTypeEnum.THIEF, x, y);
+        this.active = true;
     }
 
     @Override
     public void processPlayer(Player player) {
         // process location by parent
         super.processPlayer(player);
-        // lose default ratio of gold
-        player.loseGoldByPercentage(DEFAULT_STEAL_RATIO);
+        if (active) {
+            // lose default ratio of gold
+            player.loseGoldByPercentage(DEFAULT_STEAL_RATIO);
+            System.out.println("【info】 Encountered thief, lost 10% of gold");
+            // set this cell to inactive
+            active = false;
+        }
     }
 }

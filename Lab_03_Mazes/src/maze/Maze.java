@@ -24,6 +24,11 @@ public interface Maze {
     void randomStartAndGoal();
 
     /**
+     * this is a wrapping maze or not
+     */
+    boolean isWrapping();
+
+    /**
      * get possible directions that the player could move based on the player's current location
      *
      * @return list of possible moves
@@ -39,11 +44,9 @@ public interface Maze {
 
     void movePlayer(char c);
 
-    void showBestRoute();
-
     /**
-     * this is a wrapping maze or not
+     * show best route for this player to get gold based on its current location
      */
-    boolean isWrapping();
+    void showBestRoute();
 
 }

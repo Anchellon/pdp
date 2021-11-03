@@ -81,7 +81,7 @@ public class Player {
      * pick gold
      */
     public void pickGold(long gold) {
-        if (gold <= 0) {
+        if (gold < 0) {
             throw new IllegalArgumentException("argument should be positive");
         }
         this.goldCount += gold;

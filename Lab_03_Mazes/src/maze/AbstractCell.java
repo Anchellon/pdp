@@ -11,6 +11,9 @@ public class AbstractCell implements Cell {
     private Location location;
     private CellTypeEnum type;
 
+    /**
+     * constructors
+     */
     public AbstractCell(CellTypeEnum type, Location location) {
         if (type == null || location == null || location.getX() < 0 || location.getY() < 0) {
             throw new IllegalArgumentException("argument error");
@@ -67,6 +70,7 @@ public class AbstractCell implements Cell {
         }
         // change location
         player.setLocation(this.getLocation());
+        System.out.println("【info】 Move to [" + player.getLocation().getX() + ", " + player.getLocation().getY() + ")");
     }
 
     /**
@@ -90,16 +94,18 @@ public class AbstractCell implements Cell {
         // no matter the maze is wrapping or not, if these two cell's manhattan distance is
         // smaller than 2, then they are adjacent
         int distance = this.location.getManhattanDistance(cell.getLocation());
-        if (distance <= 1) {
+        if (distance == 1) {
             return true;
         }
 
+        // 0 1 2
+
         // if distance > 1, we then need to check if it's a wrapping maze
         if (isWrapping) {
-            if (cell.getLocation().getX() == this.location.getX() && distance == numOfColumns) {
+            if (cell.getLocation().getX() == this.location.getX() && distance == numOfColumns - 1) {
                 // in the same row, check if they are the first and the last one in this row
                 return true;
-            } else if (cell.getLocation().getY() == this.location.getY() && distance == numOfRows) {
+            } else if (cell.getLocation().getY() == this.location.getY() && distance == numOfRows - 1) {
                 // in the same column
                 return true;
             }

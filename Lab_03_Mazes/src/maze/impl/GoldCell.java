@@ -51,6 +51,7 @@ public class GoldCell extends AbstractCell {
         super.processPlayer(player);
         // process gold count
         player.pickGold(gold);
+        System.out.println("【info】 Picked " + gold + " gold");
         // clear gold in this cell
         clearGold();
     }

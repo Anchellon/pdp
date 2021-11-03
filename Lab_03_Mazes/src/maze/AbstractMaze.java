@@ -21,7 +21,7 @@ public class AbstractMaze implements Maze {
     private final int numOfRows;
     private final int numOfColumns;
     private Cell[][] cells;
-    private Map<Cell, Set<Cell>> walls;
+    private final Map<Cell, Set<Cell>> walls;
     private int numOfWalls;
     private Location startLocation;
     private Location goalLocation;
@@ -102,6 +102,8 @@ public class AbstractMaze implements Maze {
      * @return successful to generate or not
      */
     private boolean generateGoldCell() {
+        // 0 1 2
+        // 3 4 5
         // location = x * numOfColumns + y
         int location = random.nextInt(numOfColumns * numOfRows);
         int x = location / numOfColumns;
@@ -265,6 +267,9 @@ public class AbstractMaze implements Maze {
      */
     @Override
     public void setStartLocation(int x, int y) {
+        if (x < 0 || x > numOfRows - 1 || y < 0 || y > numOfColumns - 1) {
+            throw new IllegalArgumentException("index out of bounds");
+        }
         startLocation = new Location(x, y);
         if (goalLocation != null) {
             // generate special cells
@@ -277,6 +282,9 @@ public class AbstractMaze implements Maze {
      */
     @Override
     public void setGoalLocation(int x, int y) {
+        if (x < 0 || x > numOfRows - 1 || y < 0 || y > numOfColumns - 1) {
+            throw new IllegalArgumentException("index out of bounds");
+        }
         goalLocation = new Location(x, y);
         if (startLocation != null) {
             // generate special cells
@@ -288,7 +296,7 @@ public class AbstractMaze implements Maze {
      * initialize cells and generate walls
      */
     private void initialization() {
-        // step 1: generate normal cells
+        // step 1: generate cells
         generateCells();
         // step 2: generate walls
         generateWalls();
@@ -401,7 +409,6 @@ public class AbstractMaze implements Maze {
         // no wall, use next cell to process player
         nextCell.processPlayer(player);
         if (player.getLocation().getX() == goalLocation.getX() && player.getLocation().getY() == goalLocation.getY()) {
-            //
             printPlayerInfo();
             throw new RuntimeException("\n\n========== CONGRATULATION! YOU WIN! ==========\n\n");
         }
@@ -434,15 +441,15 @@ public class AbstractMaze implements Maze {
         List<Location> route = new ArrayList<>();
         boolean[][] visited = new boolean[numOfRows][numOfColumns];
         getBestRouteBacktrace(currGold, x, y, visited, route, bestRoute);
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < bestRoute.size(); i++) {
-            Location location = bestRoute.get(i);
-            sb.append("(").append(location.getX()).append(",").append(location.getY()).append(")");
-            if (i != bestRoute.size() - 1) {
-                sb.append(" -> ");
-            }
-        }
-        System.out.println(sb.toString() + "\n");
+//        StringBuilder sb = new StringBuilder();
+//        for (int i = 0; i < bestRoute.size(); i++) {
+//            Location location = bestRoute.get(i);
+//            sb.append("(").append(location.getX()).append(",").append(location.getY()).append(")");
+//            if (i != bestRoute.size() - 1) {
+//                sb.append(" -> ");
+//            }
+//        }
+//        System.out.println(sb.toString() + "\n");
         // -------
         StringBuilder sb2 = new StringBuilder();
         for (int i = 0; i < route.size(); i++) {

@@ -40,7 +40,7 @@ public class Location {
 
     public void move(MoveEnum moveEnum) {
         if (moveEnum == null) {
-            throw new IllegalArgumentException("Move Enum cannot be null");
+            throw new IllegalArgumentException("Move enum cannot be null");
         }
         this.x += moveEnum.getX();
         this.y += moveEnum.getY();
@@ -48,6 +48,8 @@ public class Location {
 
     /**
      * Get manhattan distance to another location
+     * <p>
+     * |x1 - x2| + |y1 - y2|
      *
      * @param location target location
      * @return manhattan distance
