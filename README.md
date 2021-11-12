@@ -8,6 +8,7 @@ Date: Sep-2021
 * Assignment_03_Big_Numbers
 * Assignment_04_Questionnaires
 * Assignment_05_List_Utilities
+* Assignment_06_Look-and-Say
 
 ## Lab
 * Lab_01_Birds

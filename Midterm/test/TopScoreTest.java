@@ -25,10 +25,10 @@ public class TopScoreTest {
         // (-10 + 20) * 1.5 + 25 = 40
         Run run4 = new RunImpl(false, 10, LevelEnum.EPIC, 25);
 
-//        score.addRun(0, run1);
-//        score.addRun(0, run2);
-//        score.addRun(2, run3);
-//        score.addRun(3, run4);
+        score.addRun(0, run1);
+        score.addRun(0, run2);
+        score.addRun(2, run3);
+        score.addRun(3, run4);
 
         System.out.println(score.annualReport());
     }
