@@ -9,6 +9,7 @@ Date: Sep-2021
 * Assignment_04_Questionnaires
 * Assignment_05_List_Utilities
 * Assignment_06_Look-and-Say
+* Assignment_07_Building_Dungeons
 
 ## Lab
 * Lab_01_Birds
