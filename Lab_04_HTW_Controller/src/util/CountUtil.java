@@ -29,7 +29,7 @@ public class CountUtil {
         return playerCount;
     }
 
-    public static long getCellCount() {
+    public static long getNumberOfCells() {
         return cellCount;
     }
 

@@ -12,7 +12,7 @@
     * there will be only 1 wumpus
 * arrow
     * limited number
-    * encounter wumpus -- win
+    * shoot wumpus -- player wins
     * player will lose if the player runs out of arrows
     * could specify the distance and direction
     * could freely go through tunnels(even crooked ones), but in cave, could only go straight

@@ -322,17 +322,16 @@ public class AbstractMaze implements Maze {
     /**
      * move player with moveEnum
      *
-     * @param moveEnum
      */
     @Override
     public void movePlayer(MoveEnum moveEnum) {
-        if (player == null) {
-            throw new IllegalStateException("have not set player yet");
+        if (player.getLocation() == null) {
+            throw new IllegalStateException("have not set player start location");
         }
         if (moveEnum == null) {
             throw new IllegalArgumentException("argument cannot be null");
         }
-        // get Current location
+        // get current location
         Location playerLocation = player.getLocation();
         // get next location
         int nextX = playerLocation.getX() + moveEnum.getX();

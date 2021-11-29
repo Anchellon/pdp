@@ -47,14 +47,29 @@ public class HTWDriver {
         }
         System.out.println("number of rows (1 - 5)?");
         int numOfRows = scanner.nextInt();
+        if (numOfRows < 1 || numOfRows > 5) {
+            throw new IllegalArgumentException("illegal number of rows");
+        }
         System.out.println("number of columns (1 - 5)?");
         int numOfColumns = scanner.nextInt();
+        if (numOfColumns < 1 || numOfColumns > 5) {
+            throw new IllegalArgumentException("illegal number of columns");
+        }
         System.out.println("number of bats (1 - 5)?");
         int numOfBats = scanner.nextInt();
+        if (numOfBats < 1 || numOfBats > 5) {
+            throw new IllegalArgumentException("illegal number of bats");
+        }
         System.out.println("number of pits (1 - 5)?");
         int numOfPits = scanner.nextInt();
+        if (numOfPits < 1 || numOfPits > 5) {
+            throw new IllegalArgumentException("illegal number of pits");
+        }
         System.out.println("number of arrows (1 - 5)?");
         int numOfArrows = scanner.nextInt();
+        if (numOfArrows < 1 || numOfArrows > 5) {
+            throw new IllegalArgumentException("illegal number of arrows");
+        }
         if (isPerfect) {
             maze = new PerfectMaze(numOfRows, numOfColumns, numOfBats, numOfPits);
         } else {
