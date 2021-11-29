@@ -23,7 +23,6 @@ public class AbstractMaze implements Maze {
     // different: using location to store walls
     private final Map<Location, Set<Location>> walls;
     private int numOfWalls;
-//    private Location startLocation;
 
     // list of rooms
     List<Location> rooms;
@@ -32,6 +31,9 @@ public class AbstractMaze implements Maze {
     private final int numOfWumpus = 1;
     private int numOfPit;
     private int numOfBat;
+
+    // location of wumpus
+    private Location wumpusLoc;
 
     /**
      * Constructor
@@ -103,6 +105,7 @@ public class AbstractMaze implements Maze {
         // start generating wumpus
         Random random = new Random();
         Location wumpusLocation = rooms.get(random.nextInt(rooms.size()));
+        this.wumpusLoc = wumpusLocation;
         cells[wumpusLocation.getX()][wumpusLocation.getY()] = new WumpusCell(wumpusLocation);
         // start generating pit
         while (numOfPit != 0) {
@@ -284,7 +287,12 @@ public class AbstractMaze implements Maze {
             int nextX = player.getLocation().getX() + moveEnum.getX();
             int nextY = player.getLocation().getY() + moveEnum.getY();
             if (nextX < 0 || nextX > numOfRows - 1 || nextY < 0 || nextY > numOfColumns - 1) {
-                continue;
+                if (isWrapping()) {
+                    nextX = (nextX + numOfRows) % numOfRows;
+                    nextY = (nextY + numOfColumns) % numOfColumns;
+                } else {
+                    continue;
+                }
             }
             // get next possible direction
             Location nextLoc = new Location(nextX, nextY);
@@ -340,7 +348,8 @@ public class AbstractMaze implements Maze {
         // check if there's wall
         Location nextLocation = new Location(nextX, nextY);
         if (walls.containsKey(playerLocation) && walls.get(playerLocation).contains(nextLocation)) {
-            throw new IllegalStateException("cannot enter target cell, there's wall between these two cells");
+            System.out.println("cannot enter target cell, there's wall between these two cells");
+            return;
         }
         // no wall, get next room
         Location nextRoom = getNextLocation(playerLocation, nextLocation);
@@ -411,10 +420,10 @@ public class AbstractMaze implements Maze {
         return this.type == MazeTypeEnum.WRAPPING;
     }
 
-    @Override
     /**
      * print maze, for debug using only
      */
+    @Override
     public void printMaze() {
         StringBuilder sb = new StringBuilder();
         for (int j = 0; j < numOfColumns; j++) {
@@ -554,6 +563,9 @@ public class AbstractMaze implements Maze {
         throw new IllegalArgumentException("Room doesn't exist");
     }
 
+    /**
+     * shoot an arrow with a key and a distance
+     */
     @Override
     public void shoot(char c, int distance) {
         if (distance < 1 || distance > 5) {
@@ -562,11 +574,13 @@ public class AbstractMaze implements Maze {
         if (c != 'w' && c != 'n' && c != 'e' && c != 's') {
             throw new IllegalArgumentException("illegal direction");
         }
+        // convert key to direction
         MoveEnum direction = MoveEnum.convertKey(c);
         Location currLoc = player.getLocation();
         int nextX = currLoc.getX() + direction.getX();
         int nextY = currLoc.getY() + direction.getY();
         if (isWrapping()) {
+            // check is a wrapping maze or not
             nextX = (nextX + numOfRows) % numOfRows;
             nextY = (nextY + numOfColumns) % numOfColumns;
         }
@@ -585,6 +599,9 @@ public class AbstractMaze implements Maze {
         }
     }
 
+    /**
+     * shoot an arrow in a specific direction and a specific distance
+     */
     private boolean shootInDirection(Location prevLoc, Location currLoc, int distance) {
         if (isRoom(currLoc)) {
             if (--distance == 0) {
@@ -645,7 +662,7 @@ public class AbstractMaze implements Maze {
         }
         if (this.isWrapping() ||
                 (location.getX() > 0 && location.getX() < numOfRows - 1
-            && location.getY() > 0 && location.getY() < numOfColumns - 1)) {
+                        && location.getY() > 0 && location.getY() < numOfColumns - 1)) {
             return !walls.containsKey(location) || walls.get(location).size() != 2;
         }
         // it's a border
@@ -667,5 +684,156 @@ public class AbstractMaze implements Maze {
             throw new IllegalArgumentException("num of arrows cannot smaller than 1");
         }
         this.player.setNumOfArrow(numOfArrows);
+    }
+
+    /**
+     * check the player could have a chance to win or not
+     * <p>
+     * step1: check four directions of wumpus
+     * <p>
+     * step2: check adjacent rooms around player
+     * <p>
+     * winnable:
+     * +— —+— —+— —+— —+
+     * |     W         |
+     * +   +   +---+   +
+     * |   |P+B    |   |
+     * +   +   +   +---+
+     * |   |   | *     |
+     * +   +   +   +   +
+     * |   | B | B | P |
+     * +— —+— —+— —+— —+
+     *
+     * unwinnable:
+     * +— —+— —+— —+
+     * |       | B |
+     * +   +   +   +
+     * |   | P     |
+     * +   +   +   +
+     * | P | W | * |
+     * +— —+— —+— —+
+     */
+    @Override
+    public boolean isWinnable() {
+        // step1: check four directions of wumpus
+        Set<Location> safeRooms = new HashSet<>();
+        // check four directions
+        for (int[] dir : dirs) {
+            int nextX = wumpusLoc.getX() + dir[0];
+            int nextY = wumpusLoc.getY() + dir[1];
+            if (nextX < 0 || nextX > numOfRows - 1 || nextY < 0 || nextY > numOfColumns - 1) {
+                if (!isWrapping()) {
+                    continue;
+                }
+                nextX = (nextX + numOfRows) % numOfRows;
+                nextY = (nextY + numOfColumns) % numOfColumns;
+            }
+            Location nextLoc = new Location(nextX, nextY);
+            // check if there's wall
+            if (walls.containsKey(wumpusLoc) && walls.get(wumpusLoc).contains(nextLoc)) {
+                continue;
+            }
+            checkWumpus(wumpusLoc, nextLoc, safeRooms);
+        }
+        if (safeRooms.isEmpty()) {
+            // if there's no safe room, then just return false
+            return false;
+        }
+        System.out.println(safeRooms);
+        // step2: check adjacent rooms around player
+        return checkPlayer(player.getLocation(), new HashSet<>(), safeRooms);
+    }
+
+    /**
+     * check safe rooms around wumpus
+     */
+    private void checkWumpus(Location prevLoc, Location currLoc, Set<Location> safeRooms) {
+        // if we back to the start location, then stop
+        if (currLoc.equals(wumpusLoc)) {
+            return;
+        }
+        if (isRoom(currLoc)) {
+            if (cells[currLoc.getX()][currLoc.getY()].getType().isEmpty()) {
+                // if it's a room
+                safeRooms.add(currLoc);
+            }
+            // we have to move further
+            // firstly, we should know what the direction is
+            if (!isWrapping()) {
+                // if it's not a wrapping maze
+                // they are adjacent
+                int moveX = currLoc.getX() - prevLoc.getX();
+                int moveY = currLoc.getY() - prevLoc.getY();
+                Location nextLoc = new Location(currLoc.getX() + moveX, currLoc.getY() + moveY);
+                // check if there's a wall between next room and current room
+                if (nextLoc.getX() < 0 || nextLoc.getX() > numOfRows - 1 ||
+                        nextLoc.getY() < 0 || nextLoc.getY() > numOfColumns - 1 ||
+                        (walls.containsKey(currLoc) && walls.get(currLoc).contains(nextLoc))) {
+                    // there's a wall
+                    return;
+                }
+                checkWumpus(currLoc, nextLoc, safeRooms);
+            } else {
+                // it's a wrapping maze
+                int moveX = currLoc.getX() - prevLoc.getX();
+                int moveY = currLoc.getY() - prevLoc.getY();
+                Location nextLoc = new Location((currLoc.getX() + moveX + numOfRows) % numOfRows,
+                        (currLoc.getY() + moveY + numOfColumns) % numOfColumns);
+                if (walls.containsKey(currLoc) && walls.get(currLoc).contains(nextLoc)) {
+                    // there's a wall
+                    return;
+                }
+                checkWumpus(currLoc, nextLoc, safeRooms);
+            }
+        } else {
+            // it's a tunnel, we should go to next room
+            List<MoveEnum> possibleDirections = getPossibleDirections(currLoc);
+            // visit four directions, get two exits
+            for (MoveEnum move : possibleDirections) {
+                int nextX = currLoc.getX() + move.getX();
+                int nextY = currLoc.getY() + move.getY();
+                Location adj = new Location(nextX, nextY);
+                if (!adj.equals(prevLoc)) {
+                    // there's no wall, and this location is not where we came from
+                    checkWumpus(currLoc, adj, safeRooms);
+                }
+            }
+        }
+    }
+
+    /**
+     * dfs from player's location
+     */
+    private boolean checkPlayer(Location currLoc, Set<Location> visited, Set<Location> safeRooms) {
+        // if this location has been visited
+        if (visited.contains(currLoc)) {
+            return false;
+        }
+        visited.add(currLoc);
+        // if it's a safe room, or it's a bat room
+        if (safeRooms.contains(currLoc) ||
+                cells[currLoc.getX()][currLoc.getY()].getType().contains(CellTypeEnum.BAT)) {
+            System.out.println(currLoc);
+            return true;
+        }
+        // visit adjacent rooms
+        List<MoveEnum> possibleDirections = getPossibleDirections(currLoc);
+        for (MoveEnum move : possibleDirections) {
+            int nextX = currLoc.getX() + move.getX();
+            int nextY = currLoc.getY() + move.getY();
+            if (nextX < 0 || nextX > numOfRows - 1 || nextY < 0 || nextY > numOfColumns - 1) {
+                if (!isWrapping()) {
+                    return false;
+                }
+                nextX = (nextX + numOfRows) % numOfRows;
+                nextY = (nextY + numOfColumns) % numOfColumns;
+            }
+            Location nextLoc = new Location(nextX, nextY);
+            // check next location
+            if (checkPlayer(nextLoc, visited, safeRooms)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

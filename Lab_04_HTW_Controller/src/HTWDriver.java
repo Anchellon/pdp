@@ -10,13 +10,16 @@ import java.util.Scanner;
  * @since 2021/11/25
  */
 public class HTWDriver {
+
     Scanner scanner = new Scanner(System.in);
     Maze maze;
+    HTWController controller;
 
     /**
      * initializing maze and player
      */
     private void init() {
+        // set up maze properties
         System.out.println("Is it a perfect maze (y/n)?");
         String input = scanner.next();
         boolean isPerfect;
@@ -62,57 +65,26 @@ public class HTWDriver {
             }
         }
         maze.setNumOfArrows(numOfArrows);
+        // initialize controller
+        controller = new HTWController(maze);
+        // set up start location
+        maze.printStartLocationChoices();
+        maze.setStartLocationByRoomId(scanner.nextLong());
     }
 
-    public Maze getMaze() {
-        return maze;
+    /**
+     * start game!
+     */
+    public void startGame() {
+        while (!maze.isEnd()) {
+            // if it's not end
+            controller.run();
+        }
     }
 
     public static void main(String[] args) {
         HTWDriver driver = new HTWDriver();
         driver.init();
-        Maze maze = driver.getMaze();
-        Scanner scanner = new Scanner(System.in);
-        maze.printStartLocationChoices();
-        maze.setStartLocationByRoomId(scanner.nextLong());
-        while (!maze.isEnd()) {
-            // print possible moves
-            maze.printPossibleDirections();
-            System.out.println("Shoot or Move (s-m)?");
-            String op = scanner.next();
-            switch (op) {
-                case "s":
-                    System.out.println("Distance (1-5)?");
-                    int distance = scanner.nextInt();
-                    System.out.println("Toward (n, s, w, e)?");
-                    String direction = scanner.next();
-                    maze.shoot(direction.charAt(0), distance);
-                    break;
-                case "m":
-                    System.out.println("Toward (n, s, w, e)?");
-                    // get input
-                    String typein = scanner.next();
-                    if (typein.equals("")) {
-                        System.out.println("INVALID CODE");
-                    }
-                    char code = typein.charAt(0);
-                    if (code == 'n' || code == 's' || code == 'w' || code == 'e') {
-                        maze.movePlayer(code);
-                    } else {
-                        System.out.println("INVALID CODE");
-                    }
-                    break;
-                case "o":
-                    // print maze
-                    maze.printMaze();
-                    break;
-                case "p":
-                    maze.printPlayerInfo();
-                    break;
-                default:
-                    System.out.println("INVALID CODE");
-                    break;
-            }
-        }
+        driver.startGame();
     }
 }

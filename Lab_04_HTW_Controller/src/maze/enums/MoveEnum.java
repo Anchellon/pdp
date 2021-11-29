@@ -55,8 +55,9 @@ public enum MoveEnum {
                 return MOVE_SOUTH;
             case 'e':
                 return MOVE_EAST;
+            default:
+                return null;
         }
-        return null;
     }
 
     @Override

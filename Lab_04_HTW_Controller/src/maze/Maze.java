@@ -55,4 +55,6 @@ public interface Maze {
     void setNumOfArrows(int numOfArrows);
 
     void printMaze();
+
+    boolean isWinnable();
 }

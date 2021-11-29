@@ -77,4 +77,12 @@ public class Location {
     public int hashCode() {
         return this.getX() * 10000 + this.getY();
     }
+
+    @Override
+    public String toString() {
+        return "Location{" +
+                "x=" + x +
+                ", y=" + y +
+                '}';
+    }
 }
