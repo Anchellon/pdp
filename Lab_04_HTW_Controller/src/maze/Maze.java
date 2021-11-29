@@ -53,4 +53,6 @@ public interface Maze {
     void shoot(char c, int distance);
 
     void setNumOfArrows(int numOfArrows);
+
+    void printMaze();
 }

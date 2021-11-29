@@ -411,6 +411,7 @@ public class AbstractMaze implements Maze {
         return this.type == MazeTypeEnum.WRAPPING;
     }
 
+    @Override
     /**
      * print maze, for debug using only
      */
@@ -561,11 +562,78 @@ public class AbstractMaze implements Maze {
         if (c != 'w' && c != 'n' && c != 'e' && c != 's') {
             throw new IllegalArgumentException("illegal direction");
         }
-        player.setNumOfArrow(player.getNumOfArrow() - 1);
-        if (player.getNumOfArrow() == 0) {
-            end = true;
-            System.out.println("Run out of arrows, you lose");
+        MoveEnum direction = MoveEnum.convertKey(c);
+        Location currLoc = player.getLocation();
+        int nextX = currLoc.getX() + direction.getX();
+        int nextY = currLoc.getY() + direction.getY();
+        if (isWrapping()) {
+            nextX = (nextX + numOfRows) % numOfRows;
+            nextY = (nextY + numOfColumns) % numOfColumns;
         }
+        Location nextLoc = new Location(nextX, nextY);
+        if (shootInDirection(currLoc, nextLoc, distance)) {
+            end = true;
+            System.out.println("Hee hee hee, you got the wumpus!\n" +
+                    "Next time you won't be so lucky");
+        } else {
+            System.out.println("You missed the shoot!");
+            player.setNumOfArrow(player.getNumOfArrow() - 1);
+            if (player.getNumOfArrow() == 0) {
+                end = true;
+                System.out.println("Run out of arrows, you lose");
+            }
+        }
+    }
+
+    private boolean shootInDirection(Location prevLoc, Location currLoc, int distance) {
+        if (isRoom(currLoc)) {
+            if (--distance == 0) {
+                // check if this is a wumpus room
+                return cells[currLoc.getX()][currLoc.getY()].getType().contains(CellTypeEnum.WUMPUS);
+            }
+            // we have to move further
+            // firstly, we should know what the direction is
+            if (!isWrapping()) {
+                // if it's not a wrapping maze
+                // they are adjacent
+                int moveX = currLoc.getX() - prevLoc.getX();
+                int moveY = currLoc.getY() - prevLoc.getY();
+                Location nextLoc = new Location(currLoc.getX() + moveX, currLoc.getY() + moveY);
+                // check if there's a wall between next room and current room
+                if (nextLoc.getX() < 0 || nextLoc.getX() > numOfRows - 1 ||
+                        nextLoc.getY() < 0 || nextLoc.getY() > numOfColumns - 1 ||
+                        (walls.containsKey(currLoc) && walls.get(currLoc).contains(nextLoc))) {
+                    // there's a wall
+                    return false;
+                }
+                return shootInDirection(currLoc, nextLoc, distance);
+            } else {
+                // it's a wrapping maze
+                int moveX = currLoc.getX() - prevLoc.getX();
+                int moveY = currLoc.getY() - prevLoc.getY();
+                Location nextLoc = new Location((currLoc.getX() + moveX + numOfRows) % numOfRows,
+                        (currLoc.getY() + moveY + numOfColumns) % numOfColumns);
+                if (walls.containsKey(currLoc) && walls.get(currLoc).contains(nextLoc)) {
+                    // there's a wall
+                    return false;
+                }
+                return shootInDirection(currLoc, nextLoc, distance);
+            }
+        } else {
+            // it's a tunnel, we should go to next room
+            List<MoveEnum> possibleDirections = getPossibleDirections(currLoc);
+            // visit four directions, get two exits
+            for (MoveEnum move : possibleDirections) {
+                int nextX = currLoc.getX() + move.getX();
+                int nextY = currLoc.getY() + move.getY();
+                Location adj = new Location(nextX, nextY);
+                if (!adj.equals(prevLoc)) {
+                    // there's no wall, and this location is not where we came from
+                    return shootInDirection(currLoc, adj, distance);
+                }
+            }
+        }
+        return false;
     }
 
     /**
