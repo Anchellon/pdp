@@ -654,6 +654,9 @@ public class AbstractMaze implements Maze {
 
     /**
      * target location is a room or tunnel
+     *
+     * 0 0 0
+     * 0 0 0
      */
     private boolean isRoom(Location location) {
         if (location == null) {
@@ -738,7 +741,7 @@ public class AbstractMaze implements Maze {
             // if there's no safe room, then just return false
             return false;
         }
-        System.out.println(safeRooms);
+//        System.out.println(safeRooms);
         // step2: check adjacent rooms around player
         return checkPlayer(player.getLocation(), new HashSet<>(), safeRooms);
     }
@@ -812,7 +815,7 @@ public class AbstractMaze implements Maze {
         // if it's a safe room, or it's a bat room
         if (safeRooms.contains(currLoc) ||
                 cells[currLoc.getX()][currLoc.getY()].getType().contains(CellTypeEnum.BAT)) {
-            System.out.println(currLoc);
+//            System.out.println(currLoc);
             return true;
         }
         // visit adjacent rooms
