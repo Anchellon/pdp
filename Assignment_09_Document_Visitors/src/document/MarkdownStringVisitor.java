@@ -44,6 +44,7 @@ public class MarkdownStringVisitor implements DocumentVisitor<String> {
     public String visitParagraph(Paragraph current) {
         List<BasicText> content = current.getContent();
         StringBuilder sb = new StringBuilder();
+        sb.append("\n");
         for (int i = 0; i < content.size(); i++) {
             BasicText e = content.get(i);
             sb.append(e.accept(this));
@@ -57,18 +58,13 @@ public class MarkdownStringVisitor implements DocumentVisitor<String> {
     @Override
     public String toString(List<TextElement> content) {
         StringBuilder sb = new StringBuilder();
-//        StringBuilder debug = new StringBuilder();
         for (int i = 0; i < content.size(); i++) {
             TextElement e = content.get(i);
             sb.append(e.accept(this));
             if (i != content.size() - 1) {
                 sb.append("\n");
             }
-//            debug.append(e.getText()).append("\n");
         }
-//        if (content.size() > 4) {
-//            throw new IllegalStateException(debug.toString());
-//        }
         return sb.toString();
     }
 }
