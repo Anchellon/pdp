@@ -11,6 +11,7 @@ Date: Sep-2021
 * Assignment_06_Look-and-Say
 * Assignment_07_Building_Dungeons
 * Assignment_08_Min-Max_Priority_Queue
+* Assignment_09_Document_Visitors
 
 ## Lab
 * Lab_01_Birds
