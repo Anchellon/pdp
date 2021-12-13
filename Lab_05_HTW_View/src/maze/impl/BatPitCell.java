@@ -1,5 +1,6 @@
 package maze.impl;
 
+import maze.AbstractMaze;
 import maze.Location;
 import maze.Maze;
 import maze.enums.CellTypeEnum;
@@ -27,7 +28,7 @@ public class BatPitCell extends BatCell{
         // if we're still here, then we will die
         if (player.getLocation().equals(this.getLocation())) {
             // we will fall into pit
-            maze.setEnd(true);
+            maze.setGameStatus(AbstractMaze.LOSE);
             System.out.println("You fell into a pit!\n" +
                     "Better luck next time");
         }

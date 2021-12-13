@@ -15,9 +15,12 @@ public class MainFrame extends JFrame {
         setTitle("Hunt The Wunpus -- Yuxiao");
         // window size
         setSize(400,300);
+        setLocation(480, 240);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        // cannot be resized
+        setResizable(false);
         // using flow layout
-        this.setLayout(new FlowLayout(FlowLayout.CENTER));
+//        this.setLayout(new FlowLayout(FlowLayout.CENTER));
         // init menu
         menuView = new MenuView();
         this.add(menuView);

@@ -1,5 +1,7 @@
 package maze;
 
+import maze.dto.LocationInfo;
+import maze.dto.PlayerInfo;
 import maze.enums.CellTypeEnum;
 import maze.enums.MazeTypeEnum;
 import maze.enums.MoveEnum;
@@ -27,13 +29,25 @@ public class AbstractMaze implements Maze {
     // list of rooms
     List<Location> rooms;
 
-    private boolean end;
+    // game status
+    private int gameStatus = ALIVE;
     private final int numOfWumpus = 1;
     private int numOfPit;
     private int numOfBat;
 
     // location of wumpus
     private Location wumpusLoc;
+
+    // visit status
+    private boolean[][] visited;
+
+    // start roomId
+    private long startRoomId;
+
+    // game status
+    public static final int LOSE = -1;
+    public static final int ALIVE = 0;
+    public static final int WIN = 1;
 
     /**
      * Constructor
@@ -69,6 +83,8 @@ public class AbstractMaze implements Maze {
         initialization();
         // create new player
         this.player = new Player();
+        // init visit status
+        visited = new boolean[numOfRows][numOfColumns];
     }
 
     /**
@@ -196,8 +212,8 @@ public class AbstractMaze implements Maze {
         }
     }
 
-    // four directions
-    private static final int[][] dirs = new int[][]{{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
+    // four directions -- N, S, W, E
+    private static final int[][] dirs = new int[][]{{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
 
     /**
      * get adjacent cells of target cell
@@ -297,7 +313,7 @@ public class AbstractMaze implements Maze {
             // get next possible direction
             Location nextLoc = new Location(nextX, nextY);
             // get next adjacent room location
-            Location nextRoomLoc = getNextLocation(player.getLocation(), nextLoc);
+            Location nextRoomLoc = getNextLocation(player.getLocation(), nextLoc, false);
             // check if it's a special room
             if (nextRoomLoc == null) {
                 continue;
@@ -319,9 +335,39 @@ public class AbstractMaze implements Maze {
         System.out.println(sb.toString());
     }
 
+    @Override
+    public Set<CellTypeEnum> getSurroundingRoomTypes(Location location) {
+        if (!isRoom(location)) {
+            return new HashSet<>();
+        }
+        List<MoveEnum> possibleDirections = getPossibleDirections(location);
+        Set<CellTypeEnum> surroundingTypes = new HashSet<>();
+        for (MoveEnum moveEnum : possibleDirections) {
+            int nextX = location.getX() + moveEnum.getX();
+            int nextY = location.getY() + moveEnum.getY();
+            if (nextX < 0 || nextX > numOfRows - 1 || nextY < 0 || nextY > numOfColumns - 1) {
+                if (isWrapping()) {
+                    nextX = (nextX + numOfRows) % numOfRows;
+                    nextY = (nextY + numOfColumns) % numOfColumns;
+                } else {
+                    continue;
+                }
+            }
+            // get next possible direction
+            Location nextLoc = new Location(nextX, nextY);
+            // get next adjacent room location
+            Location nextRoomLoc = getNextLocation(player.getLocation(), nextLoc, false);
+            // check if it's a special room
+            if (nextRoomLoc == null) {
+                continue;
+            }
+            surroundingTypes.addAll(cells[nextRoomLoc.getX()][nextRoomLoc.getY()].getType());
+        }
+        return surroundingTypes;
+    }
+
     /**
      * move player with moveEnum
-     *
      */
     @Override
     public void movePlayer(MoveEnum moveEnum) {
@@ -351,7 +397,7 @@ public class AbstractMaze implements Maze {
             return;
         }
         // no wall, get next room
-        Location nextRoom = getNextLocation(playerLocation, nextLocation);
+        Location nextRoom = getNextLocation(playerLocation, nextLocation, true);
         if (nextRoom == null) {
             throw new IllegalStateException("No next room");
         }
@@ -361,12 +407,15 @@ public class AbstractMaze implements Maze {
     /**
      * we may enter a tunnel, and the real next location should be the exit of tunnel
      */
-    private Location getNextLocation(Location prevLoc, Location currLoc) {
+    private Location getNextLocation(Location prevLoc, Location currLoc, boolean isVisiting) {
         if (prevLoc == null || currLoc == null) {
             throw new IllegalArgumentException("location is null");
         }
         if (currLoc.getX() < 0 || currLoc.getX() > numOfRows - 1 || currLoc.getY() < 0 || currLoc.getY() > numOfColumns - 1) {
             return null;
+        }
+        if (isVisiting) {
+            visit(currLoc);
         }
         // if it's a room, then just return this
         if (isRoom(currLoc)) {
@@ -381,16 +430,18 @@ public class AbstractMaze implements Maze {
             Location adj = new Location(nextX, nextY);
             if (!adj.equals(prevLoc)) {
                 // there's no wall, and this location is not where we came from
-                return getNextLocation(currLoc, adj);
+                return getNextLocation(currLoc, adj, isVisiting);
             }
         }
         return null;
     }
 
+
     @Override
     public void movePlayerToRandomRoom() {
         Location randomRoom = getRandomRoom();
         cells[randomRoom.getX()][randomRoom.getY()].processPlayer(player, this);
+        visit(randomRoom);
     }
 
     /**
@@ -400,8 +451,8 @@ public class AbstractMaze implements Maze {
      */
     @Override
     public void movePlayer(char c) {
-        if (c != 'w' && c != 's' && c != 'e' && c != 'n') {
-            throw new IllegalArgumentException("illegal key, should be one of [w, s, e, n]");
+        if (c != 'w' && c != 'a' && c != 's' && c != 'd') {
+            throw new IllegalArgumentException("illegal key, should be one of [w, a, s, d]");
         }
         movePlayer(MoveEnum.convertKey(c));
     }
@@ -528,13 +579,13 @@ public class AbstractMaze implements Maze {
     }
 
     @Override
-    public boolean isEnd() {
-        return this.end;
+    public int getGameStatus() {
+        return gameStatus;
     }
 
     @Override
-    public void setEnd(boolean end) {
-        this.end = end;
+    public void setGameStatus(int status) {
+        this.gameStatus = status;
     }
 
     @Override
@@ -551,26 +602,51 @@ public class AbstractMaze implements Maze {
     }
 
     @Override
+    public Long[] getStartLocations() {
+        List<Long> list = new ArrayList<>();
+        for (Location loc : rooms) {
+            Cell cell = cells[loc.getX()][loc.getY()];
+            // player could only choose empty room
+            if (cell.getType().isEmpty()) {
+                list.add(cell.getId());
+            }
+        }
+        return list.toArray(new Long[0]);
+    }
+
+    @Override
     public void setStartLocationByRoomId(long cellId) {
         // visit all rooms
         for (Location roomLoc : rooms) {
             if (cells[roomLoc.getX()][roomLoc.getY()].getId() == cellId) {
                 cells[roomLoc.getX()][roomLoc.getY()].processPlayer(player, this);
+                visit(roomLoc);
+                this.startRoomId = cellId;
                 return;
             }
         }
         throw new IllegalArgumentException("Room doesn't exist");
     }
 
+
+
+    private void visit(int x, int y) {
+        this.visited[x][y] = true;
+    }
+
+    private void visit(Location location) {
+        visit(location.getX(), location.getY());
+    }
+
     /**
      * shoot an arrow with a key and a distance
      */
     @Override
-    public void shoot(char c, int distance) {
+    public String shoot(char c, int distance) {
         if (distance < 1 || distance > 5) {
             throw new IllegalArgumentException("illegal distance");
         }
-        if (c != 'w' && c != 'n' && c != 'e' && c != 's') {
+        if (c != 'w' && c != 'a' && c != 's' && c != 'd') {
             throw new IllegalArgumentException("illegal direction");
         }
         // convert key to direction
@@ -583,19 +659,27 @@ public class AbstractMaze implements Maze {
             nextX = (nextX + numOfRows) % numOfRows;
             nextY = (nextY + numOfColumns) % numOfColumns;
         }
-        Location nextLoc = new Location(nextX, nextY);
-        if (shootInDirection(currLoc, nextLoc, distance)) {
-            end = true;
-            System.out.println("Hee hee hee, you got the wumpus!\n" +
-                    "Next time you won't be so lucky");
-        } else {
-            System.out.println("You missed the shoot!");
+        if (nextX < 0 || nextX > numOfRows - 1 || nextY < 0 || nextY > numOfColumns - 1) {
             player.setNumOfArrow(player.getNumOfArrow() - 1);
             if (player.getNumOfArrow() == 0) {
-                end = true;
-                System.out.println("Run out of arrows, you lose");
+                setGameStatus(LOSE);
+                return "Run out of arrows, you lose";
+            }
+            return "You missed the shoot!";
+        }
+        Location nextLoc = new Location(nextX, nextY);
+        if (shootInDirection(currLoc, nextLoc, distance)) {
+            setGameStatus(WIN);
+            return "Hee hee hee, you got the wumpus!\n" +
+                    "Next time you won't be so lucky";
+        } else {
+            player.setNumOfArrow(player.getNumOfArrow() - 1);
+            if (player.getNumOfArrow() == 0) {
+                setGameStatus(LOSE);
+                return "Run out of arrows, you lose";
             }
         }
+        return "You missed the shoot!";
     }
 
     /**
@@ -654,7 +738,7 @@ public class AbstractMaze implements Maze {
 
     /**
      * target location is a room or tunnel
-     *
+     * <p>
      * 0 0 0
      * 0 0 0
      */
@@ -705,7 +789,7 @@ public class AbstractMaze implements Maze {
      * +   +   +   +   +
      * |   | B | B | P |
      * +— —+— —+— —+— —+
-     *
+     * <p>
      * unwinnable:
      * +— —+— —+— —+
      * |       | B |
@@ -744,6 +828,11 @@ public class AbstractMaze implements Maze {
 //        System.out.println(safeRooms);
         // step2: check adjacent rooms around player
         return checkPlayer(player.getLocation(), new HashSet<>(), safeRooms);
+    }
+
+    @Override
+    public boolean[][] getVisitStatus() {
+        return visited;
     }
 
     /**
@@ -837,5 +926,102 @@ public class AbstractMaze implements Maze {
             }
         }
         return false;
+    }
+
+    /**
+     * get info of a location
+     * String[0] -- number of exits
+     * String[1] -- directions of exits
+     *
+     * @param location
+     * @return
+     */
+    public LocationInfo getLocationInfo(Location location) {
+        LocationInfo locationInfo = new LocationInfo();
+        // check directions
+        StringBuilder directions = new StringBuilder();
+        for (int i = 0; i < 4; i++) {
+            int[] dir = dirs[i];
+            int nextX = location.getX() + dir[0];
+            int nextY = location.getY() + dir[1];
+            if ((nextX < 0 || nextX > numOfRows - 1 || nextY < 0 || nextY > numOfColumns - 1) && !isWrapping()) {
+                continue;
+            }
+            nextX = (nextX + numOfRows) % numOfRows;
+            nextY = (nextY + numOfColumns) % numOfColumns;
+            Location nextLoc = new Location(nextX, nextY);
+            // check if there's a wall
+            if (!walls.containsKey(location) || !walls.get(location).contains(nextLoc)) {
+                switch (i) {
+                    case 0:
+                        directions.append("N");
+                        break;
+                    case 1:
+                        directions.append("S");
+                        break;
+                    case 2:
+                        directions.append("W");
+                        break;
+                    case 3:
+                        directions.append("E");
+                        break;
+                }
+            }
+        }
+        // check types
+        Set<CellTypeEnum> types = cells[location.getX()][location.getY()].getType();
+
+        // set values
+        locationInfo.setDirections(directions.toString());
+        locationInfo.setTypes(types);
+        return locationInfo;
+    }
+
+    @Override
+    public boolean isVisible(Location location) {
+        // check is visited or not
+        return visited[location.getX()][location.getY()];
+    }
+
+    @Override
+    public boolean isAdjacent(Location loc1, Location loc2) {
+        // no matter the maze is wrapping or not, if these two cell's manhattan distance is
+        // smaller than 2, then they are adjacent
+        int distance = loc1.getManhattanDistance(loc2);
+        if (distance == 1) {
+            return true;
+        }
+
+        // 0 1 2
+
+        // if distance > 1, we then need to check if it's a wrapping maze
+        if (isWrapping()) {
+            if (loc1.getX() == loc2.getX() && distance == numOfColumns - 1) {
+                // in the same row, check if they are the first and the last one in this row
+                return true;
+            } else if (loc1.getY() == loc2.getY() && distance == numOfRows - 1) {
+                // in the same column
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public void restartGame() {
+        // reset visit status
+        this.visited = new boolean[numOfRows][numOfColumns];
+        setGameStatus(ALIVE);
+    }
+
+    @Override
+    public Long getStartRoomId() {
+        return startRoomId;
+    }
+
+    @Override
+    public void switchPlayer(PlayerInfo player) {
+        this.player = player.getPlayer();
+        this.setGameStatus(player.getGameStatus());
     }
 }

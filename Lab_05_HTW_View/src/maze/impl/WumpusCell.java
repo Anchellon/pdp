@@ -1,6 +1,7 @@
 package maze.impl;
 
 import maze.AbstractCell;
+import maze.AbstractMaze;
 import maze.Location;
 import maze.Maze;
 import maze.enums.CellTypeEnum;
@@ -26,7 +27,7 @@ public class WumpusCell extends AbstractCell {
     public void processPlayer(Player player, Maze maze) {
         super.processPlayer(player, maze);
         // game over
-        maze.setEnd(true);
+        maze.setGameStatus(AbstractMaze.LOSE);
         System.out.println("Chomp, chomp, chomp, thanks for feeding the Wumpus!\n" +
                 "Better luck next time");
     }

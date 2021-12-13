@@ -1,3 +1,6 @@
+package driver;
+
+import maze.AbstractMaze;
 import maze.Maze;
 import maze.impl.NonWrappingRoomMaze;
 import maze.impl.PerfectMaze;
@@ -91,7 +94,7 @@ public class HTWDriver {
      * start game!
      */
     public void startGame() {
-        while (!maze.isEnd()) {
+        while (maze.getGameStatus() == AbstractMaze.ALIVE) {
             // if it's not end
             controller.run();
         }

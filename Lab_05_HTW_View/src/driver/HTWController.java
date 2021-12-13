@@ -1,3 +1,5 @@
+package driver;
+
 import maze.Maze;
 
 import java.util.Scanner;

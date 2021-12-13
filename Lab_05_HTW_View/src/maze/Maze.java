@@ -1,9 +1,14 @@
 package maze;
 
+import maze.dto.LocationInfo;
+import maze.dto.PlayerInfo;
+import maze.enums.CellTypeEnum;
 import maze.enums.MoveEnum;
 import player.Player;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author novo
@@ -42,21 +47,37 @@ public interface Maze {
 
     Location getRandomRoom();
 
-    boolean isEnd();
+    int getGameStatus();
 
-    void setEnd(boolean end);
+    void setGameStatus(int status);
 
     void printStartLocationChoices();
 
-
+    Long[] getStartLocations();
 
     void setStartLocationByRoomId(long cellId);
 
-    void shoot(char c, int distance);
+    String shoot(char c, int distance);
 
     void setNumOfArrows(int numOfArrows);
 
     void printMaze();
 
     boolean isWinnable();
+
+    boolean[][] getVisitStatus();
+
+    LocationInfo getLocationInfo(Location location);
+
+    boolean isVisible(Location location);
+
+    boolean isAdjacent(Location loc1, Location loc2);
+
+    Set<CellTypeEnum> getSurroundingRoomTypes(Location location);
+
+    void restartGame();
+
+    void switchPlayer(PlayerInfo player);
+
+    Long getStartRoomId();
 }
