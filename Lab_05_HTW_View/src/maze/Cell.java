@@ -15,7 +15,7 @@ public interface Cell {
 
     void setLocation(Location location);
 
-    void processPlayer(Player player, Maze maze);
+    String processPlayer(Player player, Maze maze);
 
     boolean isAdjacent(Cell cell, int numOfRows, int numOfColumns, boolean isWrapping);
 

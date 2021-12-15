@@ -39,11 +39,11 @@ public interface Maze {
      */
     void printPossibleDirections();
 
-    void movePlayer(MoveEnum moveEnum);
+    String movePlayer(MoveEnum moveEnum);
 
-    void movePlayerToRandomRoom();
+    String movePlayerToRandomRoom();
 
-    void movePlayer(char c);
+    String movePlayer(char c);
 
     Location getRandomRoom();
 

@@ -22,15 +22,18 @@ public class BatPitCell extends BatCell{
     }
 
     @Override
-    public void processPlayer(Player player, Maze maze) {
+    public String processPlayer(Player player, Maze maze) {
         // we firstly use parent's process
-        super.processPlayer(player, maze);
+        String locationResult = super.processPlayer(player, maze);
         // if we're still here, then we will die
         if (player.getLocation().equals(this.getLocation())) {
             // we will fall into pit
             maze.setGameStatus(AbstractMaze.LOSE);
             System.out.println("You fell into a pit!\n" +
                     "Better luck next time");
+            return "You fell into a pit!\n" +
+                    "Better luck next time";
         }
+        return locationResult;
     }
 }

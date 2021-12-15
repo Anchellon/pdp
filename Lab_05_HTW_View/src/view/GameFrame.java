@@ -419,8 +419,9 @@ public class GameFrame extends JPanel implements GameControl {
             JOptionPane.showMessageDialog(this, "INVALID MOVE", "ALERT", JOptionPane.ERROR_MESSAGE);
             return;
         } else {
-            maze.movePlayer(MoveEnum.parse(currLoc.getX() - playerLocation.getX(),
+            String moveResult = maze.movePlayer(MoveEnum.parse(currLoc.getX() - playerLocation.getX(),
                     currLoc.getY() - playerLocation.getY()));
+            JOptionPane.showMessageDialog(this, moveResult);
         }
         if (maze.getGameStatus() != AbstractMaze.ALIVE) {
             gameOver();
@@ -440,7 +441,8 @@ public class GameFrame extends JPanel implements GameControl {
             gameOver();
             return;
         }
-        maze.movePlayer(c);
+        String moveResult = maze.movePlayer(c);
+        JOptionPane.showMessageDialog(this, moveResult);
         if (maze.getGameStatus() != AbstractMaze.ALIVE) {
             gameOver();
         }

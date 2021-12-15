@@ -370,7 +370,7 @@ public class AbstractMaze implements Maze {
      * move player with moveEnum
      */
     @Override
-    public void movePlayer(MoveEnum moveEnum) {
+    public String movePlayer(MoveEnum moveEnum) {
         if (player.getLocation() == null) {
             throw new IllegalStateException("have not set player start location");
         }
@@ -384,8 +384,8 @@ public class AbstractMaze implements Maze {
         int nextY = playerLocation.getY() + moveEnum.getY();
         if (nextX < 0 || nextX > numOfRows - 1 || nextY < 0 || nextY > numOfColumns - 1) {
             if (this.type != MazeTypeEnum.WRAPPING) {
-                System.out.println("player has stepped out of bounds");
-                return;
+                System.out.println("player is trying to step out of bounds");
+                return "player is trying to step out of bounds";
             } else {
                 nextX = (nextX + numOfRows) % numOfRows;
                 nextY = (nextY + numOfColumns) % numOfColumns;
@@ -395,14 +395,14 @@ public class AbstractMaze implements Maze {
         Location nextLocation = new Location(nextX, nextY);
         if (walls.containsKey(playerLocation) && walls.get(playerLocation).contains(nextLocation)) {
             System.out.println("cannot enter target cell, there's wall between these two cells");
-            return;
+            return "cannot enter target cell, there's wall between these two cells";
         }
         // no wall, get next room
         Location nextRoom = getNextLocation(playerLocation, nextLocation, true);
         if (nextRoom == null) {
             throw new IllegalStateException("No next room");
         }
-        cells[nextRoom.getX()][nextRoom.getY()].processPlayer(player, this);
+        return cells[nextRoom.getX()][nextRoom.getY()].processPlayer(player, this);
     }
 
     /**
@@ -439,10 +439,10 @@ public class AbstractMaze implements Maze {
 
 
     @Override
-    public void movePlayerToRandomRoom() {
+    public String movePlayerToRandomRoom() {
         Location randomRoom = getRandomRoom();
-        cells[randomRoom.getX()][randomRoom.getY()].processPlayer(player, this);
         visit(randomRoom);
+        return cells[randomRoom.getX()][randomRoom.getY()].processPlayer(player, this);
     }
 
     /**
@@ -451,11 +451,11 @@ public class AbstractMaze implements Maze {
      * @param c w, a, s, d
      */
     @Override
-    public void movePlayer(char c) {
+    public String movePlayer(char c) {
         if (c != 'w' && c != 'a' && c != 's' && c != 'd') {
             throw new IllegalArgumentException("illegal key, should be one of [w, a, s, d]");
         }
-        movePlayer(MoveEnum.convertKey(c));
+        return movePlayer(MoveEnum.convertKey(c));
     }
 
     @Override

@@ -24,11 +24,13 @@ public class WumpusCell extends AbstractCell {
     }
 
     @Override
-    public void processPlayer(Player player, Maze maze) {
+    public String processPlayer(Player player, Maze maze) {
         super.processPlayer(player, maze);
         // game over
         maze.setGameStatus(AbstractMaze.LOSE);
         System.out.println("Chomp, chomp, chomp, thanks for feeding the Wumpus!\n" +
                 "Better luck next time");
+        return "Chomp, chomp, chomp, thanks for feeding the Wumpus!\n" +
+                "Better luck next time";
     }
 }

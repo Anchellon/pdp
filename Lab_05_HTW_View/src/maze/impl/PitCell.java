@@ -23,11 +23,13 @@ public class PitCell extends AbstractCell {
     }
 
     @Override
-    public void processPlayer(Player player, Maze maze) {
+    public String processPlayer(Player player, Maze maze) {
         super.processPlayer(player, maze);
         // game over
         maze.setGameStatus(AbstractMaze.LOSE);
         System.out.println("You fell into a pit!\n" +
                 "Better luck next time");
+        return "You fell into a pit!\n" +
+                "Better luck next time";
     }
 }

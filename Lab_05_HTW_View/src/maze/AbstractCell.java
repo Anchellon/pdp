@@ -55,13 +55,14 @@ public class AbstractCell implements Cell {
      * @param player target player
      */
     @Override
-    public void processPlayer(Player player, Maze maze) {
+    public String processPlayer(Player player, Maze maze) {
         if (player == null) {
             throw new IllegalArgumentException("argument cannot be null");
         }
         // change location
         player.setLocation(this.getLocation());
         System.out.println("【info】 Move to (" + player.getLocation().getX() + ", " + player.getLocation().getY() + ")");
+        return "Move to (" + player.getLocation().getX() + ", " + player.getLocation().getY() + ")";
     }
 
     /**
