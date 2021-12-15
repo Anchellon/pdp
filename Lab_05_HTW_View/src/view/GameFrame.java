@@ -1,5 +1,6 @@
 package view;
 
+import controller.GameController;
 import image.ImageUtil;
 import maze.AbstractMaze;
 import maze.Location;
@@ -22,7 +23,10 @@ import java.util.Set;
  * @author novo
  * @since 2021/12/9
  */
-public class GameFrame extends JPanel implements ActionListener {
+public class GameFrame extends JPanel implements GameControl {
+    private static final int VIEW_WIDTH = 400;
+    private static final int VIEW_HEIGHT = 300;
+
     private Maze maze;
     // game setting
     private int numOfRows;
@@ -40,14 +44,24 @@ public class GameFrame extends JPanel implements ActionListener {
 
     private JButton[] buttons;
 
+    // max number of players
+    private static final int MAX_PLAYER_NUM = 2;
+    // players' info
     private PlayerInfo[] players;
+    // the first player to move
     private int currPlayerIndex = 0;
+
+
+    // game controller -- process keyboard input and button click events
+    private GameController controller;
 
     public GameFrame(MenuView parent) {
         this.parent = parent;
         // divide this frame to two parts
-        this.setSize(400, 300);
+        this.setSize(VIEW_WIDTH, VIEW_HEIGHT);
         this.setLayout(null);
+        // init controller
+        this.controller = new GameController(this);
     }
 
     public void init(int numOfRows,
@@ -64,8 +78,19 @@ public class GameFrame extends JPanel implements ActionListener {
         this.numOfArrows = numOfArrows;
         // create new game
         createNewGame();
-        // init keyboard listener
-        initKeyboardListener();
+    }
+
+    /**
+     * init without parameters
+     * using old parameters
+     */
+    public void init() {
+        init(numOfRows,
+                numOfCols,
+                numOfWalls,
+                numOfBats,
+                numOfPits,
+                numOfArrows);
     }
 
     private void createNewGame() {
@@ -106,8 +131,11 @@ public class GameFrame extends JPanel implements ActionListener {
     }
 
     private boolean selectNumOfPlayers() {
-        Integer[] playerChoices = new Integer[]{1, 2};
-        Integer numOfPlayers = (Integer)JOptionPane.showInputDialog(this,
+        Integer[] playerChoices = new Integer[MAX_PLAYER_NUM];
+        for (int i = 0; i < MAX_PLAYER_NUM; i++) {
+            playerChoices[i] = i + 1;
+        }
+        Integer numOfPlayers = (Integer) JOptionPane.showInputDialog(this,
                 "SELECT NUMBER OF PLAYERS",
                 "GAME SETTING",
                 JOptionPane.INFORMATION_MESSAGE,
@@ -151,7 +179,6 @@ public class GameFrame extends JPanel implements ActionListener {
         return true;
     }
 
-
     /**
      * step1: check if current player wins
      * step2: one player lose, check if there's still an alive player
@@ -170,7 +197,9 @@ public class GameFrame extends JPanel implements ActionListener {
         }
         // check if there's alive player
         if (isPlayerAlive()) {
-            JOptionPane.showMessageDialog(this, "YOU LOSE!", "GAME OVER", JOptionPane.WARNING_MESSAGE);
+            // print current player name
+            String message = "PLAYER" + (currPlayerIndex + 1) + " LOSE!";
+            JOptionPane.showMessageDialog(this, message, "GAME OVER", JOptionPane.WARNING_MESSAGE);
         } else {
             // no alive players
             int result = JOptionPane.showConfirmDialog(this, "NO PLAYER ALIVE! Back to menu?", "GAME OVER", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
@@ -285,8 +314,10 @@ public class GameFrame extends JPanel implements ActionListener {
         scrollPane.setViewportView(gamePanel);
     }
 
+    /**
+     * refresh UI
+     */
     private void refreshButtons() {
-//        gamePanel.removeAll();
         for (int i = 0; i < numOfRows * numOfCols; i++) {
             int x = i / numOfCols;
             int y = i % numOfCols;
@@ -294,10 +325,6 @@ public class GameFrame extends JPanel implements ActionListener {
             LocationInfo locationInfo = maze.getLocationInfo(currLocation);
             JButton currButton = buttons[i];
             currButton.removeAll();
-//            currButton.setBounds(0, 0, 10, 10);
-//            int finalI = i;
-//            // add action listener
-//            currButton.addActionListener(e -> click(finalI));
             // check if this location is visible
             if (maze.isVisible(currLocation)) {
                 // render maze
@@ -339,12 +366,9 @@ public class GameFrame extends JPanel implements ActionListener {
                 currButton.setIcon(ImageUtil.empty());
             }
             // store buttons for future using
-//            gamePanel.add(currButton);
             currButton.revalidate();
             currButton.repaint();
         }
-//        gamePanel.revalidate();
-//        gamePanel.repaint();
     }
 
     /**
@@ -362,59 +386,18 @@ public class GameFrame extends JPanel implements ActionListener {
         buttonPanel.setBackground(Color.BLUE);
 
         JButton menuButton = new JButton("Menu");
-        menuButton.addActionListener(this);
+        menuButton.addActionListener(controller);
         buttonPanel.add(menuButton);
 
         JButton restartButton = new JButton("Restart");
-        restartButton.addActionListener(this);
+        restartButton.addActionListener(controller);
         buttonPanel.add(restartButton);
 
         JButton newGameButton = new JButton("New Game");
-        newGameButton.addActionListener(this);
+        newGameButton.addActionListener(controller);
         buttonPanel.add(newGameButton);
 
         this.add(buttonPanel);
-    }
-
-    /**
-     * Global keyboard listener
-     */
-    private void initKeyboardListener() {
-        KeyboardFocusManager manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
-
-        manager.addKeyEventPostProcessor(event -> {
-            if (event.getID() != KeyEvent.KEY_PRESSED) {
-                return false;
-            }
-            System.out.println(event.getKeyChar());
-            switch (event.getKeyChar()) {
-                case 'j':
-                    shoot();
-                    break;
-                case 'w':
-                case 'a':
-                case 's':
-                case 'd':
-                    move(event.getKeyChar());
-                    break;
-            }
-            return false;
-        });
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        switch (e.getActionCommand()) {
-            case "Menu":
-                parent.changeView(MenuView.MENU_VIEW);
-                break;
-            case "Restart":
-                restartGame();
-                break;
-            case "New Game":
-                init(numOfRows, numOfCols, numOfWalls, numOfBats, numOfPits, numOfArrows);
-                break;
-        }
     }
 
     /**
@@ -452,7 +435,7 @@ public class GameFrame extends JPanel implements ActionListener {
      *
      * @param c
      */
-    private void move(char c) {
+    public void move(char c) {
         if (maze.getGameStatus() != AbstractMaze.ALIVE) {
             gameOver();
             return;
@@ -480,7 +463,7 @@ public class GameFrame extends JPanel implements ActionListener {
     /**
      * restart game
      */
-    private void restartGame() {
+    public void restartGame() {
         // restart maze
         maze.restartGame();
         // restart players
@@ -495,6 +478,8 @@ public class GameFrame extends JPanel implements ActionListener {
             maze.switchPlayer(player);
             maze.setStartLocationByRoomId(maze.getStartRoomId());
         }
+        // reset current player index
+        currPlayerIndex = 0;
         maze.switchPlayer(players[currPlayerIndex]);
         refreshView();
     }
@@ -502,7 +487,7 @@ public class GameFrame extends JPanel implements ActionListener {
     /**
      * shoot an arrow
      */
-    private void shoot() {
+    public void shoot() {
         if (maze.getGameStatus() != AbstractMaze.ALIVE) {
             gameOver();
             return;
@@ -602,4 +587,13 @@ public class GameFrame extends JPanel implements ActionListener {
         // all dead
         return true;
     }
+
+    /**
+     * end game. back to menu.
+     */
+    public void backToMenu() {
+        parent.changeView(MenuView.MENU_VIEW);
+    }
+
+
 }

@@ -384,7 +384,8 @@ public class AbstractMaze implements Maze {
         int nextY = playerLocation.getY() + moveEnum.getY();
         if (nextX < 0 || nextX > numOfRows - 1 || nextY < 0 || nextY > numOfColumns - 1) {
             if (this.type != MazeTypeEnum.WRAPPING) {
-                throw new IndexOutOfBoundsException("player has stepped out of bounds");
+                System.out.println("player has stepped out of bounds");
+                return;
             } else {
                 nextX = (nextX + numOfRows) % numOfRows;
                 nextY = (nextY + numOfColumns) % numOfColumns;

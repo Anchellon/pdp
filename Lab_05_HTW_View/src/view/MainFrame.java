@@ -8,14 +8,20 @@ import java.awt.*;
  * @since 2021/12/9
  */
 public class MainFrame extends JFrame {
+    // window parameters
+    private static final int WINDOW_WIDTH = 400;
+    private static final int WINDOW_HEIGHT = 300;
+    private static final int WINDOW_LOCATION_X = 500;
+    private static final int WINDOW_LOCATION_Y = 300;
+
     private MenuView menuView;
 
     public MainFrame() throws HeadlessException {
         // game title
         setTitle("Hunt The Wunpus -- Yuxiao");
         // window size
-        setSize(400,300);
-        setLocation(480, 240);
+        setSize(WINDOW_WIDTH,WINDOW_HEIGHT);
+        setLocation(WINDOW_LOCATION_X, WINDOW_LOCATION_Y);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         // cannot be resized
         setResizable(false);
@@ -26,11 +32,5 @@ public class MainFrame extends JFrame {
         this.add(menuView);
         // visible
         setVisible(true);
-    }
-
-
-
-    public static void main(String[] args) {
-        new MainFrame();
     }
 }

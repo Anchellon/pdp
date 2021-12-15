@@ -1,5 +1,6 @@
 package view;
 
+import consts.DifficultSettings;
 import image.ImageUtil;
 import util.MazeUtil;
 
@@ -7,8 +8,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 
 /**
  * Game Menu
@@ -40,6 +39,11 @@ public class MenuView extends JPanel implements ActionListener {
     // game view
     GameFrame gameFrame;
 
+    // View names
+    public static final String GAME_VIEW = "game";
+    public static final String MENU_VIEW = "main";
+    public static final String SETTING_VIEW = "setting";
+
     public MenuView() {
         this.setBackground(Color.GRAY);
         setSize(400, 300);
@@ -48,16 +52,16 @@ public class MenuView extends JPanel implements ActionListener {
         this.setLayout(layout);
 //        this.add(new JLabel("===== HUNT THE WUMPUS ====="));
         // init main menu
-        this.add(getMainMenu(), "main");
-        this.add(getGameSettingMenu(), "setting");
+        this.add(initMainMenu(), MENU_VIEW);
+        this.add(initGameSettingMenu(), SETTING_VIEW);
         // game frame
         gameFrame = new GameFrame(this);
-        this.add(gameFrame, "game");
+        this.add(gameFrame, GAME_VIEW);
         // use main menu by default
-        layout.show(this, "main");
+        layout.show(this, MENU_VIEW);
     }
 
-    private JPanel getMainMenu() {
+    private JPanel initMainMenu() {
         JPanel mainMenuPanel = new JPanel();
         // start game button
         JButton startGameButton = new JButton("Start Game");
@@ -77,13 +81,13 @@ public class MenuView extends JPanel implements ActionListener {
         JPanel introPanel = new JPanel(new GridLayout(4, 1));
         JLabel targetLabel = new JLabel(ImageUtil.target());
         introPanel.add(targetLabel);
-        JLabel moveIntroLabel = new JLabel("move: clicking adjacent cells or pressing [w, a, s, d]");
+        JLabel moveIntroLabel = new JLabel("move: click adjacent cells or press [w, a, s, d]");
         moveIntroLabel.setHorizontalAlignment(SwingConstants.CENTER);
         introPanel.add(moveIntroLabel);
 
         JLabel wumpusLabel = new JLabel(ImageUtil.wumpus());
         introPanel.add(wumpusLabel);
-        JLabel shootIntroLabel = new JLabel("shoot: clicking shoot button or pressing [j]");
+        JLabel shootIntroLabel = new JLabel("shoot: click shoot button or press [j]");
         shootIntroLabel.setHorizontalAlignment(SwingConstants.CENTER);
         introPanel.add(shootIntroLabel);
 
@@ -92,7 +96,7 @@ public class MenuView extends JPanel implements ActionListener {
         return mainMenuPanel;
     }
 
-    private JPanel getGameSettingMenu() {
+    private JPanel initGameSettingMenu() {
         JPanel gameSettingMenu = new JPanel(new GridLayout(6, 2, 1, 2));
 //        gameSettingMenu.setSize(300, 300);
         // game setting
@@ -204,7 +208,7 @@ public class MenuView extends JPanel implements ActionListener {
 
                 break;
             case "Setting":
-                layout.show(this, "setting");
+                layout.show(this, SETTING_VIEW);
                 break;
             case "Save and Back":
                 saveSetting();
@@ -213,58 +217,42 @@ public class MenuView extends JPanel implements ActionListener {
     }
 
     /**
-     * Easy
-     * Size: 5 * 5
-     * Number of walls: 3
-     * Number of bats: 1
-     * Number of pits: 1
-     * Number of arrows: 5
-     *
-     * Medium
-     * Size: 5 * 5
-     * Number of walls: 7
-     * Number of bats: 2
-     * Number of pits: 2
-     * Number of arrows: 5
-     *
-     * Hard
-     * Size: 5 * 5
-     * Number of walls: max
-     * Number of bats: 3
-     * Number of pits: 3
-     * Number of arrows: 3
+     * 0: easy
+     * 1: medium
+     * 2: hard
      */
     private static int currDifficult = 1;
+
     private void changePresetDifficulty() {
         currDifficult = (currDifficult + 1) % 3;
         if (currDifficult == 0) {
             // easy mode
-            rowsInput.setText(String.valueOf(5));
-            colsInput.setText(String.valueOf(5));
-            wallsInput.setText(String.valueOf(1));
-            batsInput.setText(String.valueOf(1));
-            pitsInput.setText(String.valueOf(1));
-            arrowsInput.setText(String.valueOf(5));
+            rowsInput.setText(DifficultSettings.EASY_ROWS);
+            colsInput.setText(DifficultSettings.EASY_COLS);
+            wallsInput.setText(DifficultSettings.EASY_WALLS);
+            batsInput.setText(DifficultSettings.EASY_BATS);
+            pitsInput.setText(DifficultSettings.EASY_PITS);
+            arrowsInput.setText(DifficultSettings.EASY_ARROWS);
             // change button
             difficultyButton.setText("EASY");
         } else if (currDifficult == 1) {
             // medium mode
-            rowsInput.setText(String.valueOf(5));
-            colsInput.setText(String.valueOf(5));
-            wallsInput.setText(String.valueOf(7));
-            pitsInput.setText(String.valueOf(2));
-            batsInput.setText(String.valueOf(2));
-            arrowsInput.setText(String.valueOf(5));
+            rowsInput.setText(DifficultSettings.MEDIUM_ROWS);
+            colsInput.setText(DifficultSettings.MEDIUM_COLS);
+            wallsInput.setText(DifficultSettings.MEDIUM_WALLS);
+            batsInput.setText(DifficultSettings.MEDIUM_BATS);
+            pitsInput.setText(DifficultSettings.MEDIUM_PITS);
+            arrowsInput.setText(DifficultSettings.MEDIUM_ARROWS);
             // change button
             difficultyButton.setText("MEDIUM");
         } else {
             // hard mode
-            rowsInput.setText(String.valueOf(5));
-            colsInput.setText(String.valueOf(5));
-            wallsInput.setText(String.valueOf(10));
-            pitsInput.setText(String.valueOf(3));
-            batsInput.setText(String.valueOf(3));
-            arrowsInput.setText(String.valueOf(3));
+            rowsInput.setText(DifficultSettings.HARD_ROWS);
+            colsInput.setText(DifficultSettings.HARD_COLS);
+            wallsInput.setText(DifficultSettings.HARD_WALLS);
+            pitsInput.setText(DifficultSettings.HARD_BATS);
+            batsInput.setText(DifficultSettings.HARD_PITS);
+            arrowsInput.setText(DifficultSettings.HARD_ARROWS);
             // change button
             difficultyButton.setText("HARD");
         }
@@ -272,8 +260,6 @@ public class MenuView extends JPanel implements ActionListener {
         difficultyButton.repaint();
     }
 
-    public static final String GAME_VIEW = "game";
-    public static final String MENU_VIEW = "main";
     public void changeView(String view) {
         layout.show(this, view);
     }
