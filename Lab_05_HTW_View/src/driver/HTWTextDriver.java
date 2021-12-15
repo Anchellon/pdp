@@ -12,7 +12,7 @@ import java.util.Scanner;
  * @author novo
  * @since 2021/11/25
  */
-public class HTWDriver {
+public class HTWTextDriver {
 
     Scanner scanner = new Scanner(System.in);
     Maze maze;
@@ -101,7 +101,7 @@ public class HTWDriver {
     }
 
     public static void main(String[] args) {
-        HTWDriver driver = new HTWDriver();
+        HTWTextDriver driver = new HTWTextDriver();
         driver.init();
         driver.startGame();
     }

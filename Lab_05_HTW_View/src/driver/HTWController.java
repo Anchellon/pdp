@@ -26,19 +26,19 @@ public class HTWController {
             case "s":
                 System.out.println("Distance (1-5)?");
                 int distance = scanner.nextInt();
-                System.out.println("Toward (n, s, w, e)?");
+                System.out.println("Toward (w, a, s, d)?");
                 String direction = scanner.next();
                 maze.shoot(direction.charAt(0), distance);
                 break;
             case "m":
-                System.out.println("Toward (n, s, w, e)?");
+                System.out.println("Toward (w, a, s, d)?");
                 // get input
                 String typein = scanner.next();
                 if (typein.equals("")) {
                     System.out.println("INVALID CODE");
                 }
                 char code = typein.charAt(0);
-                if (code == 'n' || code == 's' || code == 'w' || code == 'e') {
+                if (code == 'w' || code == 'a' || code == 's' || code == 'd') {
                     maze.movePlayer(code);
                 } else {
                     System.out.println("INVALID CODE");
