@@ -35,6 +35,8 @@ public class GameController implements ActionListener {
             case "New Game":
                 gameFrame.init();
                 break;
+            case "SHOOT":
+                gameFrame.shoot();
         }
     }
 

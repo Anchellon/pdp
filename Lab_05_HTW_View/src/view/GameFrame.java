@@ -232,9 +232,7 @@ public class GameFrame extends JPanel implements GameControl {
         infoPanel.add(playerInfoPanel);
 
         JButton shootButton = new JButton("SHOOT");
-        shootButton.addActionListener(e -> {
-            shoot();
-        });
+        shootButton.addActionListener(controller);
         shootButton.setIcon(ImageUtil.arrow());
         infoPanel.add(shootButton);
         this.add(infoPanel);
