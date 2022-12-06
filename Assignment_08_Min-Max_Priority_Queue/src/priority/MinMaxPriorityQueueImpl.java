@@ -2,10 +2,6 @@ package priority;
 
 import java.util.*;
 
-/**
- * @author novo
- * @since 2021/11/29
- */
 public class MinMaxPriorityQueueImpl<T> implements MinMaxPriorityQueue<T>{
     private TreeMap<Integer, Queue<T>> map;
     public MinMaxPriorityQueueImpl() {
