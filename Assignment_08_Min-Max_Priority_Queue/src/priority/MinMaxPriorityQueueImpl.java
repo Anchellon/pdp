@@ -9,15 +9,15 @@ public class MinMaxPriorityQueueImpl<T> implements MinMaxPriorityQueue<T>{
     }
 
     @Override
-    public void add(T item, int priority) {
+    public void add(T element, int priority) {
         if (!map.containsKey(priority)) {
             map.put(priority, new LinkedList<>());
         }
-        map.get(priority).offer(item);
+        map.get(priority).offer(element);
     }
 
     @Override
-    public T minPriorityItem() {
+    public T minPriorityElement() {
         if (map.isEmpty()) {
             return null;
         }
@@ -30,7 +30,7 @@ public class MinMaxPriorityQueueImpl<T> implements MinMaxPriorityQueue<T>{
     }
 
     @Override
-    public T maxPriorityItem() {
+    public T maxPriorityElement() {
         if (map.isEmpty()) {
             return null;
         }
