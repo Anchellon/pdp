@@ -1,9 +1,9 @@
 package priority;
 
 public interface MinMaxPriorityQueue<T> {
-    void add(T item, int priority);
+    void add(T element, int priority);
 
-    T minPriorityItem();
+    T minPriorityElement();
 
-    T maxPriorityItem();
+    T maxPriorityElement();
 }
